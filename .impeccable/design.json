@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-31T07:04:16.439443+00:00",
+  "title": "Design System: Disruption Negotiation",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Apron Concrete",
+        "canonical": "#dfe2e4",
+        "tonalRamp": [
+          "#4c4e50",
+          "#76787a",
+          "#a0a2a4",
+          "#dfe2e4",
+          "#e9ebec",
+          "#f1f2f3",
+          "#f7f8f9",
+          "#fcfcfc"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Painted Surface",
+        "canonical": "#f7f8f8",
+        "tonalRamp": [
+          "#535456",
+          "#828384",
+          "#b1b2b2",
+          "#f7f8f8",
+          "#f9fafa",
+          "#fbfcfc",
+          "#fdfdfd",
+          "#fefefe"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Shaded Surface",
+        "canonical": "#edf0f1",
+        "tonalRamp": [
+          "#505254",
+          "#7d7f80",
+          "#aaacae",
+          "#edf0f1",
+          "#f2f4f5",
+          "#f7f8f9",
+          "#fbfbfc",
+          "#fdfefe"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#141517",
+        "tonalRamp": [
+          "#0f1012",
+          "#101214",
+          "#121315",
+          "#141517",
+          "#5b5b5d",
+          "#989899",
+          "#c7c7c7",
+          "#e7e8e8"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink Mid",
+        "canonical": "#44474c",
+        "tonalRamp": [
+          "#1e1f22",
+          "#282a2e",
+          "#34363a",
+          "#44474c",
+          "#7c7e82",
+          "#adaeb0",
+          "#d2d3d4",
+          "#eceded"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink Quiet",
+        "canonical": "#6a6d72",
+        "tonalRamp": [
+          "#292a2d",
+          "#3c3e41",
+          "#4e5055",
+          "#6a6d72",
+          "#97999c",
+          "#bdbfc1",
+          "#dbdcdd",
+          "#f0f0f1"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#c6cbce",
+        "tonalRamp": [
+          "#444749",
+          "#6a6c6f",
+          "#8e9295",
+          "#c6cbce",
+          "#d7dbdd",
+          "#e6e8e9",
+          "#f1f3f3",
+          "#f9fafa"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong",
+        "canonical": "#858c91",
+        "tonalRamp": [
+          "#313437",
+          "#494d50",
+          "#61666a",
+          "#858c91",
+          "#aaaeb2",
+          "#c9cccf",
+          "#e2e3e5",
+          "#f3f4f4"
+        ]
+      },
+      "sign-black": {
+        "role": "primary",
+        "displayName": "Sign Black",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "#0f1011",
+          "#101112",
+          "#121213",
+          "#141414",
+          "#5b5b5b",
+          "#989898",
+          "#c7c7c7",
+          "#e7e7e7"
+        ]
+      },
+      "sign-yellow": {
+        "role": "primary",
+        "displayName": "Direction Yellow",
+        "canonical": "#f5c400",
+        "tonalRamp": [
+          "#53450b",
+          "#816908",
+          "#af8d05",
+          "#f5c400",
+          "#f8d64d",
+          "#fbe58f",
+          "#fdf1c2",
+          "#fef9e5"
+        ]
+      },
+      "sign-yellow-hover": {
+        "role": "primary",
+        "displayName": "Lit Yellow",
+        "canonical": "#ffd21a",
+        "tonalRamp": [
+          "#564913",
+          "#867015",
+          "#b69717",
+          "#ffd21a",
+          "#ffe05f",
+          "#ffeb9a",
+          "#fff4c8",
+          "#fffae8"
+        ]
+      },
+      "sign-red": {
+        "role": "secondary",
+        "displayName": "Mandatory Red",
+        "canonical": "#c4122f",
+        "tonalRamp": [
+          "#440f19",
+          "#681020",
+          "#8d1126",
+          "#c4122f",
+          "#d6596d",
+          "#e597a3",
+          "#f1c6cd",
+          "#f9e7ea"
+        ]
+      },
+      "sign-white": {
+        "role": "neutral",
+        "displayName": "Sign White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#565658",
+          "#868688",
+          "#b6b7b7",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "go": {
+        "role": "tertiary",
+        "displayName": "Signal Green",
+        "canonical": "#1d6b3a",
+        "tonalRamp": [
+          "#122a1d",
+          "#153c25",
+          "#184f2d",
+          "#1d6b3a",
+          "#619775",
+          "#9cbea8",
+          "#c9dbd0",
+          "#e8f0eb"
+        ]
+      },
+      "go-tint": {
+        "role": "neutral",
+        "displayName": "Green Tint",
+        "canonical": "#e3efe6",
+        "tonalRamp": [
+          "#4d5250",
+          "#787e7b",
+          "#a3aca6",
+          "#e3efe6",
+          "#ebf4ee",
+          "#f3f8f4",
+          "#f8fbf9",
+          "#fcfdfc"
+        ]
+      },
+      "red-tint": {
+        "role": "neutral",
+        "displayName": "Red Tint",
+        "canonical": "#f7e3e5",
+        "tonalRamp": [
+          "#534e50",
+          "#82787a",
+          "#b1a3a5",
+          "#f7e3e5",
+          "#f9ebed",
+          "#fbf3f4",
+          "#fdf8f9",
+          "#fefcfc"
+        ]
+      },
+      "red-tint-ink": {
+        "role": "neutral",
+        "displayName": "Deep Red Ink",
+        "canonical": "#7d0b1d",
+        "tonalRamp": [
+          "#2f0d14",
+          "#450c16",
+          "#5b0c19",
+          "#7d0b1d",
+          "#a45461",
+          "#c6949c",
+          "#e0c4c9",
+          "#f2e7e8"
+        ]
+      },
+      "yellow-tint": {
+        "role": "neutral",
+        "displayName": "Yellow Tint",
+        "canonical": "#fbf0c2",
+        "tonalRamp": [
+          "#545245",
+          "#847f69",
+          "#b4ac8d",
+          "#fbf0c2",
+          "#fcf4d4",
+          "#fdf8e4",
+          "#fefbf0",
+          "#fffef9"
+        ]
+      },
+      "yellow-tint-ink": {
+        "role": "neutral",
+        "displayName": "Deep Yellow Ink",
+        "canonical": "#5c4400",
+        "tonalRamp": [
+          "#251e0b",
+          "#342908",
+          "#443405",
+          "#5c4400",
+          "#8d7c4d",
+          "#b7ad8f",
+          "#d8d2c2",
+          "#efece5"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Plan ID on the direction sign."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Route line."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel headings, uppercase."
+      },
+      "sign": {
+        "displayName": "Sign",
+        "purpose": "Sign panels, buttons, tabs, protocol steps."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field labels, table heads, tags."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose and values, tabular numerals."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Captions and cell content."
+      }
+    },
+    "shadows": [
+      {
+        "name": "surface",
+        "value": "0 1px 2px rgb(20 21 23 / 0.08), 0 6px 18px -8px rgb(20 21 23 / 0.18)",
+        "purpose": "Separates panels, control bar and tooltip from the ground. Never grows on hover."
+      },
+      {
+        "name": "location-keyline",
+        "value": "inset 0 0 0 2px #f5c400, 0 0 0 1px #141414",
+        "purpose": "Painted yellow edge of a location sign."
+      },
+      {
+        "name": "focus",
+        "value": "outline: 2px solid #141414; outline-offset: 2px; box-shadow: 0 0 0 4px #f5c400",
+        "purpose": "Global focus-visible ring."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All state transitions."
+      },
+      {
+        "name": "state",
+        "value": "120 to 300ms",
+        "purpose": "Buttons 120 to 160ms, protocol step 240ms, plan cells 300ms."
+      },
+      {
+        "name": "enter",
+        "value": "520ms, opacity 0 to 1, translateY 6px, blur 2px",
+        "purpose": "Turn cells revealing in sequence."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "1ms",
+        "purpose": "All animation and transition collapsed under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "tablet",
+        "value": "1180px"
+      },
+      {
+        "name": "phone",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Location Sign",
+      "kind": "custom",
+      "refersTo": "sign-location",
+      "description": "Where the negotiation is now: current step, flight and plan IDs.",
+      "html": "<span class=\"ds-sign-location\">Turn 2</span>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-sign-location{font:700 15px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:7px 10px;border-radius:2px;display:inline-flex;align-items:center;gap:8px;background:var(--sign-black);color:var(--sign-yellow);box-shadow:inset 0 0 0 2px var(--sign-yellow),0 0 0 1px var(--sign-black);}"
+    },
+    {
+      "name": "Mandatory Sign",
+      "kind": "custom",
+      "refersTo": "sign-mandatory",
+      "description": "Hard limit or rejected message.",
+      "html": "<span class=\"ds-sign-mandatory\">Rejected</span>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-sign-mandatory{font:700 15px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:7px 10px;border-radius:2px;display:inline-flex;align-items:center;gap:8px;background:var(--sign-red);color:var(--sign-white);}"
+    },
+    {
+      "name": "Direction Sign",
+      "kind": "custom",
+      "refersTo": "sign-direction",
+      "description": "The one recommended plan, with arrow, label, plan ID and description.",
+      "html": "<div class=\"ds-dir\"><svg width=\"40\" height=\"40\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg><div><span class=\"ds-dir-l\">Recommended plan, agreed by all three</span><span class=\"ds-dir-p\">GD115 · S1</span><span class=\"ds-dir-w\">Ground delay 115 min, gate S1.</span></div></div>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-dir{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px;background:var(--sign-yellow);color:var(--sign-black);border-radius:2px;padding:12px 16px;font-family:Barlow,system-ui,sans-serif}.ds-dir-l{display:block;font:700 12px/1 'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}.ds-dir-p{display:block;font:700 34px/1 'Barlow Condensed',sans-serif;letter-spacing:.03em}.ds-dir-w{display:block;font-size:15px;margin-top:4px}"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Run, approve: the next action.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg>Run again</button>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-btn-primary{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:0;border-radius:2px;padding:10px 16px;font:700 16px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.05em;text-transform:uppercase;transition:background 160ms cubic-bezier(.16,1,.3,1),box-shadow 160ms cubic-bezier(.16,1,.3,1),transform 120ms cubic-bezier(.16,1,.3,1);background:var(--sign-yellow);color:var(--sign-black);box-shadow:inset 0 0 0 1px rgb(0 0 0/.15);}.ds-btn-primary:hover{background:#ffd21a}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:2px solid var(--sign-black);outline-offset:2px;box-shadow:0 0 0 4px var(--sign-yellow);}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Replay, reveal, non-primary approvals.",
+      "html": "<button class=\"ds-btn-secondary\">Replay saved run</button>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-btn-secondary{display:inline-flex;align-items:center;gap:8px;cursor:pointer;border:0;border-radius:2px;padding:10px 16px;font:700 16px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.05em;text-transform:uppercase;transition:background 160ms cubic-bezier(.16,1,.3,1),box-shadow 160ms cubic-bezier(.16,1,.3,1),transform 120ms cubic-bezier(.16,1,.3,1);background:var(--sign-white);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule-strong);}.ds-btn-secondary:hover{box-shadow:inset 0 0 0 1px var(--ink)}.ds-btn-secondary:active{transform:translateY(1px)}.ds-btn-secondary:focus-visible{outline:2px solid var(--sign-black);outline-offset:2px;box-shadow:0 0 0 4px var(--sign-yellow);}"
+    },
+    {
+      "name": "Synthetic Tag",
+      "kind": "chip",
+      "refersTo": "tag-synthetic",
+      "description": "Marks made-up private data.",
+      "html": "<span class=\"ds-tag-syn\">synthetic</span>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-tag-syn{display:inline-flex;font:600 11px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:4px 6px;border-radius:2px;background:var(--yellow-tint);color:#7a5b00}"
+    },
+    {
+      "name": "Scenario Select",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Labelled select in the control bar.",
+      "html": "<label class=\"ds-field\"><span>Disrupted flight</span><select class=\"ds-select\"><option>OO6262 DAY-ORD 2015-07-15</option></select></label>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-field{display:grid;gap:4px;font-family:Barlow,system-ui,sans-serif}.ds-field>span{font:600 12px/1 'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#6a6d72}.ds-select{appearance:none;font:inherit;font-size:15px;color:var(--ink);background:var(--sign-white);border:1px solid var(--rule-strong);border-radius:2px;padding:8px 34px 8px 10px;min-width:230px}.ds-select:hover{border-color:var(--ink)}.ds-select:focus-visible{outline:2px solid var(--sign-black);outline-offset:2px;box-shadow:0 0 0 4px var(--sign-yellow);}"
+    },
+    {
+      "name": "Tabs",
+      "kind": "nav",
+      "refersTo": "topbar",
+      "description": "Section tabs in the black top bar.",
+      "html": "<nav class=\"ds-tabs\"><button class=\"ds-tab\" aria-selected=\"true\">Negotiation</button><button class=\"ds-tab\">Evaluation</button><button class=\"ds-tab\">Consensus log</button></nav>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-tabs{display:flex;gap:2px;height:56px;background:var(--sign-black);padding:0 16px}.ds-tab{background:none;border:0;color:#c9c8c4;cursor:pointer;padding:0 16px;font:600 15px/1 'Barlow Condensed',sans-serif;letter-spacing:.05em;text-transform:uppercase;box-shadow:inset 0 -3px 0 transparent;transition:color 160ms,box-shadow 160ms}.ds-tab:hover{color:var(--sign-white)}.ds-tab[aria-selected=true]{color:var(--sign-yellow);box-shadow:inset 0 -3px 0 var(--sign-yellow)}.ds-tab:focus-visible{outline:2px solid var(--sign-black);outline-offset:2px;box-shadow:0 0 0 4px var(--sign-yellow);}"
+    },
+    {
+      "name": "Plan Board Cells",
+      "kind": "custom",
+      "refersTo": "plan-cell",
+      "description": "Signature: every plan a cell; red where ruled out, yellow where chosen.",
+      "html": "<div class=\"ds-board\"><span class=\"ds-pc\"></span><span class=\"ds-pc ds-blk\">ATC</span><span class=\"ds-pc ds-blk ds-t2\">AIR</span><span class=\"ds-pc ds-safe\"></span><span class=\"ds-pc ds-chosen\">&rarr;</span></div>",
+      "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-board{display:grid;grid-template-columns:repeat(5,40px);gap:3px}.ds-pc{height:34px;border-radius:1px;display:grid;place-items:center;background:var(--sign-white);box-shadow:inset 0 0 0 1px var(--rule);font:700 11px/1 'Barlow Condensed',sans-serif;transition:background 300ms,box-shadow 300ms}.ds-pc:hover{outline:2px solid var(--ink);outline-offset:1px}.ds-blk{background:var(--sign-red);color:var(--sign-white);box-shadow:none;font-size:10px}.ds-t2{box-shadow:inset 0 0 0 3px var(--sign-black)}.ds-safe{box-shadow:inset 0 0 0 2px var(--go)}.ds-chosen{background:var(--sign-yellow);color:var(--sign-black);box-shadow:inset 0 0 0 2px var(--sign-black)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Airside Sign Line",
+    "overview": "The interface reads like the signage an aircraft taxis past: a cool concrete ground, and on it a small set of panels whose colour tells you, before you read a word, what kind of statement they make. Black panels with yellow type say where you are. Yellow panels with black type and an arrow say which way to go. Red panels with white type say stop: a hard limit or a rejection. Everything else is plain, quiet, and ruled with 1px lines.\n\nDensity is high but legible at laptop distance. The condensed sign face carries every label, identifier, heading and button; the plain Barlow body carries explanation, always in sentence case. Numbers are tabular everywhere so turns, minutes and scores line up across columns. Corners are square (2px), so panels feel fabricated rather than soft.\n\nThe world refuses the generic card dashboard where every box weighs the same. Weight comes from sign colour, not from size or decoration, and the most important object on screen is the one yellow direction sign.",
+    "keyCharacteristics": [
+      "Cool concrete ground (ground) with near-white surfaces and 1px cool-grey rules.",
+      "Three sign colours, each with one job: black for location, yellow for direction, red for mandatory.",
+      "A fourth, quieter signal, signal green (go), only for signed and verified states.",
+      "Barlow Condensed uppercase for panels and labels, Barlow for prose, tabular numerals throughout.",
+      "Square 2px corners; plan-board cells at 1px.",
+      "Motion only to advance the story: turns reveal in sequence while the location sign moves."
+    ],
+    "rules": [
+      {
+        "name": "The One Job Rule",
+        "body": "Each sign colour has exactly one meaning: black-and-yellow is location, yellow is direction, red is mandatory, green is signed. Never use red for emphasis, yellow for decoration, or green for \"nice\".",
+        "section": "colors"
+      },
+      {
+        "name": "The One Yellow Sign Rule",
+        "body": "At most one solid yellow direction sign carries the recommendation on a screen; the primary button and the chosen plan cell repeat the same plan, never a competing one.",
+        "section": "colors"
+      },
+      {
+        "name": "The Not Only Colour Rule",
+        "body": "Every signal colour travels with text or an icon (party code in a blocked cell, \"Signed\", \"Rejected\", arrow on direction).",
+        "section": "colors"
+      },
+      {
+        "name": "The Painted Panel Rule",
+        "body": "Uppercase condensed type is for things a sign would say (names, IDs, states, actions). Sentences are never uppercase and never condensed.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "`font-variant-numeric: tabular-nums` is set on the body and inherited everywhere.",
+        "section": "typography"
+      },
+      {
+        "name": "The Painted Not Lifted Rule",
+        "body": "Nothing rises on hover. State is shown by a colour change, a keyline, or a 2px outline, never by a larger shadow or a lift.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do give each signal colour one job: black-and-yellow for location, yellow for direction, red for mandatory, green for signed.",
+      "Do set every label, ID, state and action in Barlow Condensed uppercase, and every sentence in Barlow sentence case.",
+      "Do divide with 1px rules (rule) and keep corners at 2px (1px on plan cells).",
+      "Do pair every signal colour with a word, party code or icon.",
+      "Do mark synthetic values with the synthetic tag and scripted agents with \"no AI\".",
+      "Do keep numerals tabular."
+    ],
+    "donts": [
+      "Don't use red, yellow or green as decoration or emphasis.",
+      "Don't show more than one solid yellow recommendation sign at once.",
+      "Don't round corners beyond 2px or lift elements on hover.",
+      "Don't set prose in the condensed face or in uppercase.",
+      "Don't use em dashes in UI copy."
+    ]
+  }
+}
