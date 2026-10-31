@@ -99,6 +99,7 @@ async function boot() {
   if (!S.meta.has_api_key) {
     claude.disabled = true;
     claude.closest("label").title = "Add ANTHROPIC_API_KEY to .env and restart the server to use Claude agents.";
+    claude.nextElementSibling.textContent = "Claude agents (needs API key)";
   }
   $("#keystate").innerHTML = S.meta.has_api_key
     ? `${icon("key-round")} Claude agents ready <b>${esc(S.meta.model)}</b>`
@@ -330,20 +331,22 @@ function renderDecision(stage) {
     body += `<div class="status-line"><span class="sign sign--mandatory">${icon("shield-alert")} No safe agreement</span> The deterministic rulebook decided (no AI).</div>`;
     body += `<div class="callout callout--red">${icon("triangle-alert")}<div><b>Why:</b> ${esc(humanReason(fb.reason))}${fb.explanation?.length ? `<br>Conflicting limits: ${fb.explanation.map(esc).join("; ")}` : ""}<br><small>Rule applied: ${esc(ruleText(fb.branch))}</small></div></div>`;
   }
-  body += `<div class="direction-sign" role="status">${icon("arrow-right")}<div>
+  body += `<div class="direction-sign ${done ? "" : "is-rulebook"}" role="status">${icon("arrow-right")}<div>
+      <span class="label">${done ? "Recommended plan, agreed by all three" : "Rulebook plan, no agreement"}</span>
       <div class="pid">${esc(shortPlan(plan.plan_id))}</div>
       <div class="what">${esc(planText(plan.plan_id))}${plan.target_arrival_min != null ? `. Target arrival ${hhmm(plan.target_arrival_min)}` : ""}</div></div></div>`;
   if (esc_.length) body += esc_.map((x) => `<div class="callout callout--warn">${icon("triangle-alert")}<div><b>Needs a human:</b> ${esc(x)}</div></div>`).join("");
   const roles = [["controller", "Arrival controller", "ATC organisation"], ["duty_manager", "Airline duty manager", "Airline operations control"], ["ramp_lead", "Ramp lead", "Ground handler"]];
-  body += `<div><div class="subhead">Human approval</div><div class="approvals">${roles.map(([id, name, org]) => {
+  const nApp = roles.filter(([id]) => p.approvals.some((x) => x.role === id)).length;
+  body += `<div><div class="subhead" style="display:flex;justify-content:space-between">Human approval: each organisation signs off <span class="approved-count">${nApp} of 3 approved</span></div><div class="approvals">${roles.map(([id, name, org]) => {
     const a = p.approvals.find((x) => x.role === id);
-    return `<div class="approval"><span class="who">${name}<small>${org}</small></span>${a
+    return `<div class="approval ${a ? "is-signed" : ""}"><span class="who">${name}<small>${org}</small></span>${a
       ? `<span class="approved">${icon("user-check")} Approved ${new Date(a.ts).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>`
-      : `<button class="btn btn--secondary btn--small" data-approve="${id}" type="button">${icon("file-check-2")} Approve as ${name.toLowerCase()}</button>`}</div>`;
+      : `<button class="btn ${nApp === 0 && id === "controller" ? "btn--primary" : "btn--secondary"} btn--small" data-approve="${id}" type="button">${icon("file-check-2")} Approve as ${name.toLowerCase()}</button>`}</div>`;
   }).join("")}</div></div>`;
   body += `<div class="decision-foot">
     <button class="verified ${verified.ok ? "" : "bad"}" type="button" data-goto-log>${icon(verified.ok ? "shield-check" : "shield-alert")} ${esc(verified.ok ? verified.message.replace("Log verified", "Signed log verified") : verified.message)}</button>
-    <button class="btn btn--primary btn--small" type="button" id="reveal-btn">${icon(S.revealed ? "eye-off" : "eye")} ${S.revealed ? "Hide 2015 outcome" : "Reveal what happened in 2015"}</button>
+    <button class="btn ${nApp > 0 ? "btn--primary" : "btn--secondary"} btn--small" type="button" id="reveal-btn">${icon(S.revealed ? "eye-off" : "eye")} ${S.revealed ? "Hide 2015 outcome" : "Reveal what happened in 2015"}</button>
   </div>
   <div class="status-line" style="font-size:12.5px">${icon("info")} ${S.run.meta.agents === "claude" ? `Claude agents, ${S.run.meta.llm_calls} model calls, ${S.run.meta.wall_clock_s}s` : `Scripted agents (no AI), ${S.run.meta.llm_calls} agent calls`}${S.run.meta.pressure ? " · pressure test" : ""}</div>`;
   el.innerHTML = head + body;
@@ -379,6 +382,8 @@ async function approve(role, btn) {
 /* ------------------------------------------------------------------ turns grid */
 function renderGrid(stage) {
   const { public: pub, mandates, private: priv } = S.sc;
+  const ai = (S.run?.meta?.agents || opts().agents) === "claude";
+  $("#neg-intro").textContent = `Each column is a separate organisation and a separate ${ai ? "Claude call" : "scripted agent (no AI)"}. Columns only see their own private state. The coordinator (right) is plain code: it holds no private data, checks every message, and picks the plan all three rank highest.`;
   const p = S.run ? parse(S.run) : null;
   const pending = (t) => !S.run || stage < t;
   let h = `<div class="colhead rowhead" style="background:var(--surface-2)"></div>`;
@@ -425,7 +430,7 @@ function cell(t, r, p, pending, pub, stage) {
   if (msg && t === 1) {
     body += `<ul class="limits">${msg.contracts.map((c) => { const [a, b] = contractText(c, pub); return `<li><span>${esc(a)}</span>${b ? `<small>${esc(b)}</small>` : ""}</li>`; }).join("")}</ul>`;
     const lims = Object.entries(msg.stated_limits || {});
-    if (lims.length) body += `<div class="chips">${lims.map(([k, val]) => `<span class="tag">${LIMIT_TEXT[k] || k} ${val} min</span>`).join("")}</div>`;
+    if (lims.length) body += `<div class="chips"><span class="lbl">Hard limits stated:</span>${lims.map(([k, val]) => `<span class="tag">${LIMIT_TEXT[k] || k} ${val} min</span>`).join("")}</div>`;
     if (msg.notes_for_humans) body += `<p class="quote">${esc(msg.notes_for_humans)}</p>`;
   }
   if (msg && t === 2) {
@@ -458,7 +463,7 @@ function coordCell(t, p, pending, stage) {
     const f = p.feasible[1];
     if (!f) return `<div class="cell is-pending">Stopped</div>`;
     return `<div class="cell${enter}"><div class="coord-num">${S.sc.plans.length} ${icon("arrow-right")} ${f.size} <small>plans pass every limit</small></div>
-      <span>Plans ruled out are red on the plan board below.</span></div>`;
+      <a href="#board-h">See which party ruled out what on the plan board</a></div>`;
   }
   if (t === 2) {
     const sel = p.selected;
@@ -468,7 +473,7 @@ function coordCell(t, p, pending, stage) {
     const rows = [win, ...all.filter((r) => r !== win).sort((a, b) => b.min - a.min || b.sum - a.sum)].slice(0, 5);
     const tie = win && win.min === 0;
     return `<div class="cell${enter}"><span>Selected: <span class="sign sign--direction" style="font-size:13px;padding:4px 7px">${esc(shortPlan(sel.plan.plan_id))}</span></span>
-      <table class="borda"><thead><tr><th>Plan</th><th>ATC</th><th>Airl.</th><th>Grnd</th><th>Worst</th></tr></thead><tbody>
+      <table class="borda"><thead><tr><th>Plan</th><th>ATC</th><th>Airl.</th><th>Grnd</th><th>Worst rank</th></tr></thead><tbody>
       ${rows.map((r) => `<tr class="${r.pid === sel.plan.plan_id ? "win" : ""}"><td>${esc(shortPlan(r.pid))}</td>${["ATC", "AIRLINE", "GROUND"].map((k) => `<td>${(r.sc[k] ?? 0).toFixed(2)}</td>`).join("")}<td>${r.min.toFixed(2)}</td></tr>`).join("")}
       </tbody></table><small style="color:var(--ink-3)">Rank score: 1.00 = an agent's first choice, 0 = not in its top 5. The plan with the best worst score wins.${tie ? " No plan was in all three top 5s, so the tie went to the lowest diversion risk, then the lowest expected delay." : ""}</small></div>`;
   }
@@ -487,6 +492,7 @@ function renderBoard(stage) {
   const broadcast = new Set(stage >= 2 && p?.feasible[2] ? p.feasible[2].plan_ids : stage >= 1 && p?.feasible[1] ? p.feasible[1].plan_ids : []);
   const ranked = new Set(stage >= 2 && p ? Object.values(p.t[2]).flatMap((m) => m.ranking) : []);
   const chosen = stage >= 4 && p ? (p.done || p.fallback)?.plan?.plan_id : stage >= 2 ? p?.selected?.plan?.plan_id : null;
+  const CODE = { ATC: "ATC", AIRLINE: "AIR", GROUND: "GND" };
   const state = (pid) => {
     const hits = (blocked[pid] || []).filter((h) => S.filters[h.by] && h.turn <= Math.max(stage, 1));
     const cls = [];
@@ -494,15 +500,17 @@ function renderBoard(stage) {
     else if (hits.length) cls.push("blocked", hits.every((h) => h.turn === 2) ? "t2" : "");
     else if (broadcast.has(pid)) cls.push("safe");
     if (ranked.has(pid) && pid !== chosen) cls.push("ranked");
-    return { cls: cls.join(" "), hits };
+    const codes = [...new Set(hits.map((x) => CODE[x.by]))];
+    return { cls: cls.join(" "), hits, codes };
   };
-  let h = `<div class="board-row axis"><span class="lab">Gate</span>${delays.map((d) => `<span class="ax">${d === 0 ? "Hold" : `+${d}`}</span>`).join("")}</div>`;
+  let h = `<div class="board-caption"><span>Arrival gate</span><span>Ground delay before departure (minutes after schedule)</span></div>
+    <div class="board-row axis"><span class="lab"></span>${delays.map((d) => `<span class="ax">${d === 0 ? "Hold" : `+${d}`}</span>`).join("")}</div>`;
   for (const g of gates) {
     h += `<div class="board-row" role="row"><span class="lab">${g === "G1" ? "G1 (own)" : g}</span>`;
     for (const d of delays) {
       const pl = byKey[`${g}|${d}`];
       const st = state(pl.plan_id);
-      h += `<button type="button" class="pc ${st.cls}" data-pid="${pl.plan_id}" aria-label="${esc(planText(pl.plan_id))}">${st.cls.includes("chosen") ? icon("arrow-right") : ""}</button>`;
+      h += `<button type="button" class="pc ${st.cls}" data-pid="${pl.plan_id}" aria-label="${esc(planText(pl.plan_id))}">${st.cls.includes("chosen") ? icon("arrow-right") : st.cls.includes("blocked") ? st.codes.join("<br>") : ""}</button>`;
     }
     h += `</div>`;
   }
@@ -616,11 +624,11 @@ async function renderEval() {
   el.innerHTML = `
   <article class="panel"><div class="panel-head"><div><h2>Evaluation</h2>
     <p>${esc(e.scope)}. Agents: ${esc(e.agents)}. Every system faces the same flights; the real 2015 delay is used only to score.</p></div></div>
-    <div class="headline-findings">
-      <div class="finding"><b>${ours.diversions} vs ${fcfs?.diversions}</b><span>diversions: our agents vs no coordination, out of ${ours.n} flights</span></div>
-      <div class="finding"><b>${fmt(ours["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</b><span>same aircraft's next departure vs 2015, on flights not diverted (rulebook alone: ${fmt(fb?.["next_leg_delay_vs_2015_same_flights_min"], " min", 1)})</span></div>
-      <div class="finding"><b>${ours.binding_violations}</b><span>agreed plans that broke a published limit, across all runs</span></div>
-    </div></article>
+    <table class="keyres"><thead><tr><th>Key result</th><th class="ours">Our agents</th><th>Rulebook only</th><th>No coordination</th></tr></thead><tbody>
+      <tr><td>Diversions<small>out of ${ours.n} flights, fewer is better</small></td><td class="ours">${ours.diversions}</td><td>${fb?.diversions ?? ""}</td><td>${fcfs?.diversions ?? ""}</td></tr>
+      <tr><td>Next departure of the same aircraft vs 2015<small>minutes, flights not diverted, negative = earlier than 2015</small></td><td class="ours">${fmt(ours["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</td><td>${fmt(fb?.["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</td><td>${fmt(fcfs?.["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</td></tr>
+      <tr><td>Agreed plans that broke a published limit<small>across all runs, must be 0</small></td><td class="ours">${ours.binding_violations}</td><td>n/a</td><td>n/a</td></tr>
+    </tbody></table></div></article>
   <article class="panel"><div class="panel-head"><div><h2>Systems compared</h2><p>Hindsight agents are a cheating baseline: they are shown the real delay. They show how much a hindsight demo would flatter the result.</p></div></div>
     <div class="scroll-x"><table class="data"><thead><tr><th>System</th>${COLS.map(([, n, s]) => `<th>${n}<small>${s}</small></th>`).join("")}</tr></thead>
     <tbody>${e.table.map((r, i) => `<tr class="${i === 0 ? "ours" : r.system.startsWith("Hindsight") ? "cheat" : ""}"><td>${esc(r.system)}</td>${COLS.map(([k]) => `<td>${cellv(r, k)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>

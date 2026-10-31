@@ -45,8 +45,10 @@
           <span>Pressure test<small>Tell the Airline agent the others agreed to a 25 min fuel reserve</small></span>
         </label>
         <span class="spacer"></span>
-        <button class="btn btn--secondary" id="replay" type="button"></button>
-        <button class="btn btn--primary" id="run" type="button"></button>
+        <span class="actions">
+          <button class="btn btn--secondary" id="replay" type="button"></button>
+          <button class="btn btn--primary" id="run" type="button"></button>
+        </span>
       </form>
       <div class="legend" aria-label="How to read the signs">
         <span><span class="sign sign--location">Here</span> where the negotiation is now</span>
@@ -62,16 +64,6 @@
         <article class="panel decision" id="decision" aria-labelledby="decision-h"></article>
       </div>
 
-      <article class="panel negotiation" aria-labelledby="neg-h">
-        <div class="panel-head">
-          <div>
-            <h2 id="neg-h">The three turns</h2>
-            <p>Each column is a separate organisation and a separate AI call. Columns only see their own private state. The coordinator (right) is plain code: it holds no private data, checks every message, and picks the plan all three rank highest.</p>
-          </div>
-        </div>
-        <div class="neg-grid" id="neg-grid"></div>
-      </article>
-
       <article class="panel board-wrap" aria-labelledby="board-h">
         <div class="panel-head">
           <div>
@@ -83,13 +75,23 @@
         <div class="board-tools" id="board-tools"></div>
         <div class="board" id="board" role="grid" aria-label="Plan board"></div>
         <div class="board-key">
-          <span><i class="sw"></i> passes every limit, not shortlisted</span>
-          <span><i class="sw blocked"></i> ruled out in turn 1</span>
-          <span><i class="sw t2"></i> ruled out by an extra limit in turn 2</span>
+          <span><i class="sw"></i> passes every limit, not in the top 15 shown to agents</span>
+          <span><i class="sw blocked">ATC</i> ruled out by that party's limit (ATC, AIR = Airline, GND = Ground)</span>
+          <span><i class="sw blocked t2">AIR</i> ruled out by an extra limit added in turn 2</span>
           <span><i class="sw safe"></i> shortlisted for the agents to rank</span>
           <span><i class="sw ranked"></i> ranked by at least one agent</span>
-          <span><i class="sw chosen"></i> selected plan</span>
+          <span><i class="sw chosen"></i> selected plan (rulebook plan if no agreement)</span>
         </div>
+      </article>
+
+      <article class="panel negotiation" aria-labelledby="neg-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="neg-h">The three turns</h2>
+            <p id="neg-intro">Each column is a separate organisation and a separate agent call. Columns only see their own private state. The coordinator (right) is plain code: it holds no private data, checks every message, and picks the plan all three rank highest.</p>
+          </div>
+        </div>
+        <div class="neg-grid" id="neg-grid"></div>
       </article>
 
       <article class="panel reveal" id="reveal" hidden aria-labelledby="reveal-h"></article>
