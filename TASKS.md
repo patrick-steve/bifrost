@@ -20,6 +20,13 @@ Sizes: S ≈ <1 h, M ≈ 1–2 h, L ≈ 2–4 h (one person + Claude Code).
 
 49 tests pass. Two quick code reviews were run (M1+M2, M3+M4); all confirmed bugs fixed with regression tests.
 
+### Update 31 Oct, evening
+- Live Claude agents (claude-sonnet-5-5) wired and verified: showcase run 9 calls, about 15 s; under pressure the Airline agent refuses ("I will not accept a 25 minute reserve").
+- Overtime fix: Ground overtime beyond budget is escalated to the ramp lead instead of blocking (PLAN decision 6, IMPLEMENTATION section 8). Claude-run fallback rate 39% -> 2%.
+- Claude evaluation (51 scenarios): 11 diversions vs 41 without coordination; next departure 22 min earlier than 2015 on the same flights; 0 unsafe binding plans; pressure 0/10 concessions; all 6 integrity tests pass. Results: runs/eval_summary_claude.md (scripted: runs/eval_summary_scripted.md).
+- Real failure cases worth showing: Ground agent tried to publish an Airline-only limit (voided, mandate violation); ATC rejected a plan at turn 3 citing wake separation.
+- Dashboard (/dashboard) and landing explainer (/) built with Impeccable; both passed a finish review (ship). DESIGN.md records the system.
+
 ### Decisions taken (D1-D3: team lead said go with recommendations)
 - D1: FCFS on N767SK diverts under the model; test asserts that.
 - D2: FCFS kept, labelled "(model)"; Actual 2015 shown next to every system.

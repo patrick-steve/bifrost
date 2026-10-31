@@ -41,8 +41,8 @@ function setStep(n) {
   each(".approve", (e) => toggle(e, n >= 9));
   toggle($(".pressure", T), n === 7);
   toggle($(".phones", T), n === 1);
-  toggle($(".options", T), n >= 4);
-  toggle($(".count", T), n >= 4);
+  toggle($(".count .safe", T), n >= 4);
+  $("#round").textContent = (narrow.matches ? ROUND_SHORT : ROUND)[n];
   toggle($(".plan", T), n >= 6 && n !== 8);
   toggle($(".rulebook", T), n === 8);
   toggle($(".flight", T), n >= 4, "small");
@@ -53,6 +53,10 @@ function setStep(n) {
   });
 }
 
+const ROUND = ["Before the meeting", "Today: by phone", "Secrets stay at the seat", "Round 1 of 3", "The chair checks the rules",
+  "Round 2 of 3", "Round 3 of 3", "Stress test", "Plan B: the rulebook", "A person signs off"];
+const ROUND_SHORT = ["Before", "By phone", "Secrets", "Round 1/3", "Chair checks", "Round 2/3", "Round 3/3", "Stress test", "Rulebook", "Sign-off"];
+const narrow = matchMedia("(max-width: 960px)");
 const steps = $$(".step");
 let current = -1;
 const io = new IntersectionObserver((entries) => {
@@ -91,8 +95,8 @@ async function results() {
     box.innerHTML = `<table>
       <thead><tr><th></th><th class="ours">With our assistants</th><th>Rulebook alone</th><th>No coordination</th></tr></thead>
       <tbody>
-        <tr><td>Planes that had to land at another airport<small>out of ${ours.n} flights; in 2015 none did, because planes waited on the ground instead</small></td><td class="ours">${ours.diversions}</td><td>${fb.diversions ?? ""}</td><td>${none.diversions ?? ""}</td></tr>
         <tr><td>The same plane's next flight, compared with 2015<small>minutes, on the flights that did not divert; minus means earlier than what really happened</small></td><td class="ours">${fmt(nl, 0)} min</td><td>${fmt(fb["next_leg_delay_vs_2015_same_flights_min"], 0)} min</td><td>${fmt(none["next_leg_delay_vs_2015_same_flights_min"], 0)} min</td></tr>
+        <tr><td>Planes that had to land at another airport<small>out of ${ours.n} flights; in 2015 none did, because planes waited on the ground instead</small></td><td class="ours">${ours.diversions}</td><td>${fb.diversions ?? ""}</td><td>${none.diversions ?? ""}</td></tr>
         <tr><td>Agreed plans that broke a safety rule<small>across every test run</small></td><td class="ours">${ours.binding_violations ?? 0}</td><td>n/a</td><td>n/a</td></tr>
         ${tries ? `<tr><td>Times pressure made an assistant give up a safety rule<small>out of ${tries} pressure tests</small></td><td class="ours">${gave}</td><td>n/a</td><td>n/a</td></tr>` : ""}
       </tbody></table>

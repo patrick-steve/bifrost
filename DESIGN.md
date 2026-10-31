@@ -21,6 +21,9 @@ colors:
   red-tint-ink: "#7d0b1d"
   yellow-tint: "#fbf0c2"
   yellow-tint-ink: "#5c4400"
+  slab: "#24272b"
+  slab-ink: "#e9ecee"
+  slab-ink-2: "#b4bbc0"
 typography:
   display:
     fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
@@ -63,6 +66,29 @@ typography:
     fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.5
+  persuade-display:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(44px, 5.2vw, 76px)"
+    fontWeight: 600
+    lineHeight: 0.98
+    letterSpacing: "-0.005em"
+  persuade-section:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(36px, 4vw, 56px)"
+    fontWeight: 600
+    lineHeight: 1.02
+  persuade-step:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(32px, 3.2vw, 46px)"
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: "0.005em"
+  persuade-body:
+    fontFamily: "Barlow, system-ui, sans-serif"
+    fontSize: "18px"
+    fontWeight: 400
+    lineHeight: 1.6
+    fontFeature: "\"tnum\""
 rounded:
   cell: "1px"
   sign: "2px"
@@ -140,6 +166,42 @@ components:
   plan-cell-chosen:
     backgroundColor: "{colors.sign-yellow}"
     textColor: "{colors.sign-black}"
+  button-cta:
+    backgroundColor: "{colors.sign-yellow}"
+    textColor: "{colors.sign-black}"
+    rounded: "{rounded.sign}"
+    padding: "15px 20px"
+  button-cta-hover:
+    backgroundColor: "{colors.sign-yellow-hover}"
+  button-cta-big:
+    backgroundColor: "{colors.sign-yellow}"
+    textColor: "{colors.sign-black}"
+    rounded: "{rounded.sign}"
+    padding: "20px 28px"
+  button-cta-small:
+    backgroundColor: "{colors.sign-yellow}"
+    textColor: "{colors.sign-black}"
+    rounded: "{rounded.sign}"
+    padding: "9px 12px"
+  table-slab:
+    backgroundColor: "{colors.slab}"
+    textColor: "{colors.slab-ink}"
+    rounded: "{rounded.sign}"
+    padding: "64px 24px 26px"
+  table-seat:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.sign}"
+    padding: "12px"
+  table-option-struck:
+    backgroundColor: "{colors.sign-red}"
+    rounded: "{rounded.cell}"
+  table-option-safe:
+    backgroundColor: "{colors.slab-ink}"
+    rounded: "{rounded.cell}"
+  table-option-chosen:
+    backgroundColor: "{colors.sign-yellow}"
+    rounded: "{rounded.cell}"
 ---
 
 # Design System: Disruption Negotiation
@@ -161,6 +223,7 @@ The world refuses the generic card dashboard where every box weighs the same. We
 - Barlow Condensed uppercase for panels and labels, Barlow for prose, tabular numerals throughout.
 - Square 2px corners; plan-board cells at 1px.
 - Motion only to advance the story: turns reveal in sequence while the location sign moves.
+- Explainer (Persuade) surfaces scale the same signs up and add one dark slab, the meeting table, where the story advances step by step.
 
 ## Colors
 
@@ -183,6 +246,7 @@ A neutral concrete field with three saturated signal colours that never trade jo
 - **Ink** (ink), **Ink Mid** (ink-2), **Ink Quiet** (ink-3): body text, secondary prose, labels and captions.
 - **Rule** (rule) for every 1px divider and grid line; **Rule Strong** (rule-strong) for input borders, the protocol separators and table header underlines.
 - **Tints** (yellow-tint, red-tint, go-tint) with their deep inks (yellow-tint-ink, red-tint-ink): row highlights for "ours", warnings, the synthetic tag, and banners. Tints never stand in for the solid sign.
+- **Tarmac Slab** (slab) with **Slab Ink** (slab-ink) and **Slab Ink Mid** (slab-ink-2): the dark top of the meeting table on explainer surfaces, its primary text and its secondary text (dates, counts). Safe options on the slab use Slab Ink; options not yet judged sit in a mid tarmac grey between slab and ink.
 
 ### Named Rules
 **The One Job Rule.** Each sign colour has exactly one meaning: black-and-yellow is location, yellow is direction, red is mandatory, green is signed. Never use red for emphasis, yellow for decoration, or green for "nice".
@@ -190,6 +254,8 @@ A neutral concrete field with three saturated signal colours that never trade jo
 **The One Yellow Sign Rule.** At most one solid yellow direction sign carries the recommendation on a screen; the primary button and the chosen plan cell repeat the same plan, never a competing one.
 
 **The Not Only Colour Rule.** Every signal colour travels with text or an icon (party code in a blocked cell, "Signed", "Rejected", arrow on direction).
+
+**The Painted Slab Rule.** The slab is a table top, not a dark theme: it always carries its painted 2px yellow keyline set 10px in from the edge, and the sign colours keep their usual jobs on it (red struck out, yellow chosen, location sign for the round).
 
 ## Typography
 
@@ -207,6 +273,16 @@ A neutral concrete field with three saturated signal colours that never trade jo
 - **Label** (600, 11 to 13px, 0.06 to 0.08em, uppercase): field labels, fact terms, table heads, subheads, tags.
 - **Body** (400, 15px, 1.5): prose and values, max 72 to 80ch. Small body (12.5 to 14px) for captions and cell content.
 
+### Persuade scale (explainer surfaces)
+The same two faces, sized for reading at a distance by people new to the subject.
+- **Persuade Display** (600, clamp(44px, 5.2vw, 76px), 0.98, -0.005em): the one hook headline in the first viewport.
+- **Persuade Section** (600, clamp(36px, 4vw, 56px), 1.02, max 20 to 22ch): headings of full-width bands and the closing statement.
+- **Persuade Step** (600, clamp(32px, 3.2vw, 46px), 1.05): the heading of each scroll step beside the meeting table.
+- **Persuade Body** (400, 18px, 1.6): all explainer prose, max 34em in steps. Ledes run 18 to 21px (clamp(18px, 1.35vw, 21px)) or 20px in bands; list items 19px; fine print 15px in ink-3.
+- Signs and buttons keep the sign face but grow: bar links 16px, CTA 19px (24px big, 15px small), result table heads 15px, and the "ours" result figure 24px condensed 700.
+
+Persuade headings are short sentence-case display lines in the condensed face, never uppercase; paragraphs stay in Barlow.
+
 ### Named Rules
 **The Painted Panel Rule.** Uppercase condensed type is for things a sign would say (names, IDs, states, actions). Sentences are never uppercase and never condensed.
 
@@ -220,9 +296,13 @@ The negotiation grid is the spatial model of the product: a 148px row-head colum
 
 Spacing follows a 4px-based scale (s1 to s7); 16px separates major panels, 12px separates related items. Breakpoints: at 1180px the overview stacks and the negotiation grid scrolls horizontally with 220px columns; at 760px the top bar stacks, tabs scroll, facts go to two columns and the page clips horizontal overflow.
 
+Explainer surfaces use a 64px sticky black bar with side padding clamp(16px, 4vw, 48px). The story is a two-column grid (steps 0.85fr, table 1.15fr, max 1440px, gap clamp(24px, 4vw, 64px)): each step is at least 78vh tall (the hero fills the viewport below the bar), and the meeting table sits in a sticky stage that fills the viewport under the bar while the steps scroll past. Only the step nearest the viewport centre is at full opacity; the others rest at 32%. After the story come full-width bands (max 1240px, padding clamp(64px, 9vw, 120px) vertical, 1px rule on top), a surface-filled results band, and a black closing band with the big CTA centred. At 960px the story becomes one column, the table becomes a compact sticky strip under the bar (ground fill, 1px rule beneath), seat detail hides, every step is shown at full opacity and the two-column lists stack.
+
 ## Elevation & Depth
 
 Mostly flat. Structure comes from 1px rules and the step from ground to surface, not from lift. Panels, the control bar and the tooltip carry one soft shadow token (`0 1px 2px rgb(20 21 23 / 0.08), 0 6px 18px -8px rgb(20 21 23 / 0.18)`) that only separates surface from ground. Sign keylines are inset box-shadows (2px yellow inside a 1px black edge on location signs; 2px black inside the chosen cell), which is a painted edge, not depth.
+
+The meeting table is the one place with more weight: seat cards carry a slightly deeper resting shadow (`0 1px 2px rgb(20 21 23 / 0.08), 0 10px 24px -14px rgb(20 21 23 / 0.35)`) and the slab casts `0 18px 40px -20px rgb(20 21 23 / 0.6)` under its painted keyline, so the table reads as an object seen from above. Both are static; neither changes on hover.
 
 ### Named Rules
 **The Painted Not Lifted Rule.** Nothing rises on hover. State is shown by a colour change, a keyline, or a 2px outline, never by a larger shadow or a lift.
@@ -230,6 +310,8 @@ Mostly flat. Structure comes from 1px rules and the step from ground to surface,
 ## Shapes
 
 Square-cornered throughout: 2px on signs, buttons, panels, inputs and callouts; 1px on plan-board cells, swatches and limit bullets. Limit bullets are 10px red squares, not dots. The only round shapes are the 6px "ranked" dot on plan cells and the icons. Rules are 1px; keylines are 2px (3px on the rulebook sign and on turn-2 blocked cells). The empty state uses a 1px dashed rule-strong border.
+
+On explainer surfaces the same language holds at larger size: option cells on the slab are 1px-cornered squares (aspect ratio 1, 2px gutters), list bullets are 14px green or red squares, and the "Signed" stamp is the only rotated shape (-4deg, 2px green inset keyline).
 
 ## Components
 
@@ -254,6 +336,8 @@ Every plan is a 34px cell. White with a 1px rule keyline means it passes every l
 - **Small:** 7px 10px, 14px type.
 - **Active:** moves down 1px. **Disabled:** 55% opacity. **Busy:** icon spins.
 - **Focus (global):** 2px black outline, 2px offset, 4px yellow halo.
+- **Large CTA (explainer surfaces):** a link styled as the primary button at Persuade scale: condensed 700 19px uppercase, 0.05em tracking, 15px 20px padding, trailing arrow, same faint inset edge. Hover goes to Lit Yellow and nudges the arrow 3px right; active moves down 1px. **Big** (24px, 20px 28px) closes the page on the black band; **Small** (15px, 9px 12px) sits in the bar and drops "Open the" on phones. Every CTA on a page points to the same place, the live demo.
+- **Text link:** Barlow 500, ink, underline offset 4px, trailing chevron; the secondary action beside a CTA.
 
 ### Tags
 Condensed 600 11px uppercase, 4px 6px, 1px currentColor inset keyline. The **synthetic** tag is a yellow-tint fill with deep yellow ink and is mandatory on any made-up private value.
@@ -265,6 +349,27 @@ Condensed 600 11px uppercase, 4px 6px, 1px currentColor inset keyline. The **syn
 
 ### Navigation
 Tabs in the black top bar: condensed 600 15px uppercase, light grey at rest, white on hover, yellow text with a 3px yellow underline when selected. The protocol strip is a row of step labels joined by 22px 1px rules: grey ahead, green when done, red when failed, and the current step becomes a location sign.
+
+### Meeting table (signature, explainer surfaces)
+A top-down meeting: three seat cards around a dark slab, with the chair below. Grid of 1fr / 1.45fr / 1fr with areas airline (top), ATC and ground (left and right of the slab), chair (bottom); 14px gap, max 760px wide, 14px text.
+- **Seat:** surface card, 2px corners, 12px padding, the seat shadow, a location sign naming the party with its icon, and a 13px ink-3 role line.
+- **Chair:** no card; a quiet sign ("Chair: plain code, no AI") centred under the slab.
+- **Slab:** slab fill, Slab Ink text, 2px yellow keyline inset 10px (6px inset, 1px keyline at 960px), at least 360px tall. A location sign at the top names the current round; the disrupted flight (location sign, 22px route line, Slab Ink Mid date) sits in the middle and scales to 86% once options appear.
+- **Option grid:** 4 rows (gates) by 25 columns (delay steps) of square cells, untested in mid tarmac grey.
+
+Step states, advanced by whichever scroll step is nearest the viewport centre:
+1. **Before:** flight only.
+2. **By phone:** a yellow condensed "phone · phone · phone" line on the slab.
+3. **Secrets:** each seat reveals a lock line on surface-2. Private, stays at the seat.
+4. **Round 1:** each seat sends a red rule note (white text, 2px corners); secrets dim to 55%.
+5. **Chair checks:** options turn red (struck) or Slab Ink (safe) with a 6ms per-cell stagger; the count reads 101 then "34 safe".
+6. **Round 2:** each seat shows its first choice in condensed uppercase above a 1px rule; rule notes fall back to a red outline.
+7. **Round 3:** green "Signed" stamps land on each seat, the chosen option turns yellow, and the yellow direction sign with the plan lands in the slab (700ms drop and settle).
+8. **Stress test:** the airline seat shows the pressure message on yellow-tint with the refusal in green.
+9. **Rulebook:** stamps and plan clear; a location sign "No deal: rulebook plan" takes the plan's place.
+10. **Sign-off:** each seat adds a green "approved" line with a user-check icon.
+
+Reveals animate max-height and opacity (520ms and 360ms, standard ease); nothing lifts. The table is decorative (aria-hidden); the step text carries the meaning.
 
 ### Panels and callouts
 Panels: surface fill, 2px corners, the soft surface shadow, 16px 24px 24px padding, uppercase title with a short sentence-case explanation beneath. Callouts and banners: tint fill with matching deep ink and a leading icon (red for violations, yellow for "needs a human", green for verified).
@@ -278,6 +383,7 @@ Panels: surface fill, 2px corners, the soft surface shadow, 16px 24px 24px paddi
 - **Do** pair every signal colour with a word, party code or icon.
 - **Do** mark synthetic values with the synthetic tag and scripted agents with "no AI".
 - **Do** keep numerals tabular.
+- **Do** keep the meeting table's slab dark with its painted yellow keyline, and let sign colours keep their jobs on it.
 
 ### Don't:
 - **Don't** use red, yellow or green as decoration or emphasis.
