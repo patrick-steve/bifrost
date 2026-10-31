@@ -6,6 +6,39 @@ State at time of writing: **nothing built**. Folder holds only the two docs, the
 Sizes: S ≈ <1 h, M ≈ 1–2 h, L ≈ 2–4 h (one person + Claude Code).
 `→` = depends on. Each milestone's tests must pass before the next milestone's work is merged (IMPLEMENTATION §0.6).
 
+## Status (31 Oct 2026, 14:35 SGT)
+
+| Workstream | State |
+|---|---|
+| WS-A Foundations (M1) | Done, tests green |
+| WS-B Decision core (M2) | Done, tests green |
+| WS-C Spine (M3) | Done. `python -m dn.run --showcase --scripted` runs end to end with no API key |
+| WS-D Agents + coordinator (M4) | Done with scripted agents. **D4 (live Claude showcase run) blocked on `ANTHROPIC_API_KEY`** |
+| WS-E UI (M5) | Done (`app/streamlit_app.py`), AppTest green for run, pressure, replay, approve |
+| WS-F Evaluation (M6) | Done with scripted agents (51 scenarios, 11 s). Rerun with `--agents claude` once the key is set |
+| WS-G Pitch | Not started |
+
+49 tests pass. Two quick code reviews were run (M1+M2, M3+M4); all confirmed bugs fixed with regression tests.
+
+### Decisions taken (D1-D3: team lead said go with recommendations)
+- D1: FCFS on N767SK diverts under the model; test asserts that.
+- D2: FCFS kept, labelled "(model)"; Actual 2015 shown next to every system.
+- D3: Evaluation set is pre-departure scenarios only.
+
+### Deviations from IMPLEMENTATION.md (state these if asked)
+1. **No `temperature=0`**: current Claude models (Sonnet 5.5) reject sampling params and forced `tool_choice`. Agents use structured outputs (`messages.parse`). Determinism lives in the code layer (contracts, coordinator, fallback); the saved log is the replay.
+2. **LLM fills a draft schema; code merges helper contracts and workbook limits.** Loosening a helper contract is structurally impossible rather than detected. `LOOSENING_ATTEMPT` still fires for stated limits looser than the workbook or than the agent's own earlier limits (the pressure test path).
+3. **ATC evaluates 5-minute slots**: a target is available if any minute in [t, t+5) meets wake spacing. Exact-minute checking left only 46% of slots and an almost empty feasible set.
+4. **Late-inbound scenarios**: forecast from `LATE_AIRCRAFT_DELAY` at the **origin** by departure hour; simulation never diverts (aircraft leaves when ready, arrival delay = max(W, d)).
+5. **Arrival day rollover uses `SCHEDULED_TIME`** (local times across time zones; 716 rows were wrongly pushed a day). Forecast also excludes the arrival day for overnight flights.
+6. **Tie-break and broadcast order** use (P(divert), expected arrival delay, plan_id). Expected delay alone ignores diverted samples and would favour HOLD.
+7. Reason code `ARRIVAL_DELAY` renamed `LATE_ARRIVAL` (avoids a sealed column name in prompts).
+8. Ground overtime budget and helper contracts are enforced inside each agent's own domain code at turn 3 (private data never leaves it).
+9. Log: every agent message and mandate must carry a valid HMAC, and DONE signatures must match the commitments. Known limit: truncating the tail of a log is not detectable without an external anchor.
+
+### Biggest open issue for the pitch
+Under the spec's simulation, about half of the 51 scenarios divert for every system (ours 26, FCFS 41), while 0 of the 2015 flights diverted. One decision point plus 15 min of holding cannot absorb long weather events. Options: (a) present it honestly as the model's limit, (b) add a re-plan at departure (out of spec). See `runs/eval_summary.md`.
+
 ---
 
 ## 0. Decisions needed before / during build (blockers)
