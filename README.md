@@ -1,4 +1,7 @@
-# disruption-negotiation
+# Bifrost
+
+A bridge between the three teams that run an airport during a disruption.
+
 
 Autonomous SG 2026, Airbus track, Challenge #2. Three independent agents (ATC, Airline, Ground) negotiate a recovery plan for one disrupted flight in at most 3 turns, under a coordinator that holds no private data, with a deterministic fallback rulebook and a hash-chained, HMAC-signed consensus log. See `PLAN.md` (intent), `IMPLEMENTATION.md` (spec), `TASKS.md` (status and deviations).
 

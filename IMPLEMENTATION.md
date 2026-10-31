@@ -31,7 +31,7 @@ Environment variables:
 ## 2. Repository layout
 
 ```
-disruption-negotiation/
+bifrost/
   PLAN.md
   IMPLEMENTATION.md
   README.md                    # how to run, 1 page

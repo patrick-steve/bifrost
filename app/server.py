@@ -31,7 +31,7 @@ from dn.simulate import simulate
 from dn.time_utils import min_to_hhmm
 
 STATIC = Path(__file__).parent / "static"
-app = FastAPI(title="Disruption negotiation")
+app = FastAPI(title="Bifrost")
 _lock = threading.Lock()
 
 

@@ -1,7 +1,7 @@
 # PLAN.md – Source of truth
 
 Autonomous SG 2026 · Airbus AI & Aerospace Track · **Challenge #2**
-Working repo name: `disruption-negotiation`
+Project name: **Bifrost** (repo `bifrost`)
 Status: design locked 31 Oct 2026, 13:20 SGT. Build follows `IMPLEMENTATION.md`.
 
 If anything in code or slides disagrees with this file, this file wins. Change this file first, then the code.

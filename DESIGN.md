@@ -1,5 +1,5 @@
 ---
-name: Disruption Negotiation
+name: Bifrost
 description: Airside signage as the grammar of a three-party negotiation over one disrupted flight.
 colors:
   ground: "#dfe2e4"
@@ -204,7 +204,7 @@ components:
     rounded: "{rounded.cell}"
 ---
 
-# Design System: Disruption Negotiation
+# Design System: Bifrost
 
 ## Overview
 

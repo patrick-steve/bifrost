@@ -1,1 +1,1 @@
-"""Disruption negotiation: three independent agents, one coordinator, one rulebook."""
+"""Bifrost (disruption negotiation): three independent agents, one coordinator, one rulebook."""
