@@ -14,6 +14,8 @@ SIZE_RANK = {"Large hub": 0, "Medium hub": 1, "Small hub": 2, "Non-hub": 3}
 
 @lru_cache(maxsize=1)
 def load_flights() -> pd.DataFrame:
+    if not config.FLIGHTS_CSV.exists() and config.FLIGHTS_PARQUET.exists():
+        return pd.read_parquet(config.FLIGHTS_PARQUET)
     cache = config.RUNS_DIR / "cache" / "flights.parquet"
     if cache.exists() and cache.stat().st_mtime >= config.FLIGHTS_CSV.stat().st_mtime:
         return pd.read_parquet(cache)

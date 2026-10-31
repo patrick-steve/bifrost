@@ -1,0 +1,6 @@
+system,n,arrival_delay_vs_2015_same_flights_min,next_leg_delay_vs_2015_same_flights_min,mean_arrival_delay_min (not diverted),diversions,mean_holding_min,total_holding_fuel_kg,mean_next_leg_delay_min,missed_connection_pax (synthetic),ground_overtime_min (synthetic),binding_violations,max_turns,fallback_rate,escalations,mean_decision_s,llm_calls_per_scenario
+"Ours (agents, no hindsight)",51,5.8,-22.2,89.2,11,3.7,7520.0,76.5,443.0,1569.0,0.0,3.0,0.02,43.0,7.7,9.0
+FCFS baseline (model),51,-17.9,-20.6,68.5,41,12.1,24600.0,65.1,648.0,304.0,,,,,,
+Fallback rulebook only,51,14.6,-13.4,98.0,11,3.9,7880.0,85.3,513.0,1836.0,,,1.0,,,
+Hindsight agents (cheating baseline),51,-23.9,-48.8,59.5,11,4.4,8880.0,49.9,312.0,927.0,0.0,3.0,0.02,30.0,8.0,9.0
+Actual 2015 (recorded),51,,,105.2,0,,,105.5,,,,,,,,

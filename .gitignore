@@ -1,4 +1,4 @@
-data/
+data/flights.csv
 runs/
 .env
 .venv/
@@ -8,3 +8,4 @@ __pycache__/
 .impeccable/review/
 .impeccable/build/
 *.egg-info/
+.vercel

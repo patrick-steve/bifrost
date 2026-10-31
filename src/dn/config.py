@@ -4,8 +4,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = Path(os.environ.get("DN_DATA_DIR", ROOT / "data"))
-RUNS_DIR = Path(os.environ.get("DN_RUNS_DIR", ROOT / "runs"))
+# Vercel's filesystem is read-only except /tmp.
+RUNS_DIR = Path(os.environ.get("DN_RUNS_DIR", "/tmp/bifrost-runs" if os.environ.get("VERCEL") else ROOT / "runs"))
+RESULTS_DIR = ROOT / "results"  # committed evaluation summaries, read when runs/ has none
 FLIGHTS_CSV = DATA_DIR / "flights.csv"
+FLIGHTS_PARQUET = DATA_DIR / "flights.parquet"  # committed compact copy of flights.csv
 WORKBOOK = DATA_DIR / "challenge2_operational_constraints.xlsx"
 
 try:  # optional .env support

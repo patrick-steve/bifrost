@@ -11,6 +11,10 @@ import threading
 from functools import lru_cache
 from pathlib import Path
 
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))  # dn importable without install
+
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -44,8 +48,14 @@ def has_key() -> bool:
     return bool(os.environ.get("ANTHROPIC_API_KEY"))
 
 
+def _results_file(name: str) -> Path:
+    """Prefer fresh output in runs/, fall back to the committed results/ copy."""
+    p = config.RUNS_DIR / name
+    return p if p.exists() else config.RESULTS_DIR / name
+
+
 def scenario_list() -> list[dict]:
-    path = config.RUNS_DIR / "scenarios.json"
+    path = _results_file("scenarios.json")
     items = json.loads(path.read_text()) if path.exists() else []
     if not any(i["scenario_id"] == "showcase" for i in items):
         s = scenario(showcase_index())
@@ -241,19 +251,19 @@ def reveal(run_id: str, scenario_id: str):
 
 # ---------------------------------------------------------------- evaluation
 def _eval_sets() -> list[str]:
-    return [k for k in ("claude", "scripted") if (config.RUNS_DIR / f"eval_summary_{k}.csv").exists()]
+    return [k for k in ("claude", "scripted") if _results_file(f"eval_summary_{k}.csv").exists()]
 
 
 @app.get("/api/eval")
 def evaluation(which: str | None = None):
     sets = _eval_sets()
     if which in sets:
-        md, csv = config.RUNS_DIR / f"eval_summary_{which}.md", config.RUNS_DIR / f"eval_summary_{which}.csv"
+        md, csv = _results_file(f"eval_summary_{which}.md"), _results_file(f"eval_summary_{which}.csv")
     elif sets:
         which = sets[0]
-        md, csv = config.RUNS_DIR / f"eval_summary_{which}.md", config.RUNS_DIR / f"eval_summary_{which}.csv"
+        md, csv = _results_file(f"eval_summary_{which}.md"), _results_file(f"eval_summary_{which}.csv")
     else:
-        md, csv = config.RUNS_DIR / "eval_summary.md", config.RUNS_DIR / "eval_summary.csv"
+        md, csv = _results_file("eval_summary.md"), _results_file("eval_summary.csv")
     if not csv.exists():
         return {"available": False}
     import pandas as pd

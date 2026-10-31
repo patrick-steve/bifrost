@@ -2,6 +2,20 @@
 name = "bifrost"
 version = "0.1.0"
 requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+    "pydantic>=2.7",
+    "anthropic>=0.40",
+    "pyarrow>=15",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "playwright>=1.40"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]

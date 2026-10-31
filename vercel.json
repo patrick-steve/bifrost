@@ -1,0 +1,9 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "functions": {
+        "app/server.py": {
+            "maxDuration": 120,
+            "excludeFiles": "{tests/**,runs/**,.impeccable/**,data/flights.csv}"
+        }
+    }
+}
