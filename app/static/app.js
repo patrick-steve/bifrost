@@ -445,7 +445,13 @@ function cell(t, r, p, pending, pub, stage) {
       ? `<div class="commit ok">${icon("circle-check")} Signed ${esc(shortPlan(msg.plan_id))}</div><span class="quote" style="font-style:normal">Takes responsibility for: ${msg.owned_fields.map((f) => FIELD[f] || f).join(", ") || "nothing"}</span>`
       : `<div class="commit no">${icon("circle-x")} Rejected</div><span>Reason: ${esc(REASON[msg.reason_if_reject] || msg.reason_if_reject)}</span>`;
   }
-  return `<div class="cell${enter}">${body}${v}</div>`;
+  let pressure = "";
+  if (S.run?.meta?.pressure && r.id === "AIRLINE" && t >= 2) {
+    const conceded = (p.viol[t][r.id] || []).length > 0;
+    pressure = `<div class="callout callout--warn">${icon("triangle-alert")}<div><b>Pressure applied:</b> "${esc(S.meta.pressure_line)}"</div></div>`
+      + (msg && !conceded ? `<div class="commit ok" style="font-size:14px">${icon("shield-check")} Did not concede: safety limits unchanged</div>` : "");
+  }
+  return `<div class="cell${enter}">${pressure}${body}${v}</div>`;
 }
 
 function plainDetail(d = "") {
@@ -590,10 +596,10 @@ function renderReveal() {
 }
 
 /* ------------------------------------------------------------------ evaluation tab */
-async function renderEval() {
+async function renderEval(which) {
   const el = $("#eval");
-  if (el.dataset.done) return;
-  const e = await api("/api/eval");
+  if (el.dataset.done && !which) return;
+  const e = await api(`/api/eval${which ? `?which=${which}` : ""}`);
   if (!e.available) {
     el.innerHTML = `<article class="panel"><div class="empty"><strong>No evaluation yet</strong><span>Run <code>python -m dn.evaluate --agents scripted</code> (or <code>--agents claude</code>) and reload this tab.</span></div></article>`;
     return;
@@ -621,9 +627,11 @@ async function renderEval() {
     leakage: ["No hindsight", "Sealed 2015 outcome never appears in a prompt"],
     convergence: ["Turn limit", "Every run ends within 3 turns"],
   };
+  const switcher = (e.sets || []).length > 1 ? `<div class="segmented" role="radiogroup" aria-label="Result set">${e.sets.map((k) =>
+    `<label><input type="radio" name="evalset" value="${k}" ${k === e.which ? "checked" : ""}><span>${k === "claude" ? "Claude agents" : "Scripted agents (no AI)"}</span></label>`).join("")}</div>` : "";
   el.innerHTML = `
   <article class="panel"><div class="panel-head"><div><h2>Evaluation</h2>
-    <p>${esc(e.scope)}. Agents: ${esc(e.agents)}. Every system faces the same flights; the real 2015 delay is used only to score.</p></div></div>
+    <p>${esc(e.scope)}. Agents: ${esc(e.agents)}. Every system faces the same flights; the real 2015 delay is used only to score.</p></div>${switcher}</div>
     <table class="keyres"><thead><tr><th>Key result</th><th class="ours">Our agents</th><th>Rulebook only</th><th>No coordination</th></tr></thead><tbody>
       <tr><td>Diversions<small>out of ${ours.n} flights, fewer is better</small></td><td class="ours">${ours.diversions}</td><td>${fb?.diversions ?? ""}</td><td>${fcfs?.diversions ?? ""}</td></tr>
       <tr><td>Next departure of the same aircraft vs 2015<small>minutes, flights not diverted, negative = earlier than 2015</small></td><td class="ours">${fmt(ours["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</td><td>${fmt(fb?.["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</td><td>${fmt(fcfs?.["next_leg_delay_vs_2015_same_flights_min"], " min", 1)}</td></tr>
@@ -637,6 +645,7 @@ async function renderEval() {
     <div class="tests">${e.integrity.map((t) => { const [n, d] = testText[t.test] || [t.test, ""]; return `<div class="test"><div class="commit ${t.pass ? "ok" : "no"}">${icon(t.pass ? "circle-check" : "circle-x")} ${n}</div><p>${d}</p><p class="mono">${esc(Object.entries(t.detail).map(([k, v]) => `${k.replace(/_/g, " ")}: ${typeof v === "object" ? Object.entries(v).map(([a, b]) => `${a} ${b}`).join(", ") : v}`).join(" · "))}</p></div>`; }).join("")}</div></article>
   ${e.story.length ? `<article class="panel"><div class="panel-head"><div><h2>Cases to look at</h2><p>Pick these flights in the selector on the Negotiation tab.</p></div></div><ul>${e.story.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></article>` : ""}`;
   el.dataset.done = "1";
+  el.querySelectorAll("input[name=evalset]").forEach((r) => r.addEventListener("change", () => renderEval(r.value)));
 }
 
 /* ------------------------------------------------------------------ rules tab */

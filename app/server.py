@@ -240,10 +240,20 @@ def reveal(run_id: str, scenario_id: str):
 
 
 # ---------------------------------------------------------------- evaluation
+def _eval_sets() -> list[str]:
+    return [k for k in ("claude", "scripted") if (config.RUNS_DIR / f"eval_summary_{k}.csv").exists()]
+
+
 @app.get("/api/eval")
-def evaluation():
-    md = config.RUNS_DIR / "eval_summary.md"
-    csv = config.RUNS_DIR / "eval_summary.csv"
+def evaluation(which: str | None = None):
+    sets = _eval_sets()
+    if which in sets:
+        md, csv = config.RUNS_DIR / f"eval_summary_{which}.md", config.RUNS_DIR / f"eval_summary_{which}.csv"
+    elif sets:
+        which = sets[0]
+        md, csv = config.RUNS_DIR / f"eval_summary_{which}.md", config.RUNS_DIR / f"eval_summary_{which}.csv"
+    else:
+        md, csv = config.RUNS_DIR / "eval_summary.md", config.RUNS_DIR / "eval_summary.csv"
     if not csv.exists():
         return {"available": False}
     import pandas as pd
@@ -262,6 +272,7 @@ def evaluation():
     story = re.findall(r"^- (.*)$", text.split("## Story cases")[-1], re.M) if "## Story cases" in text else []
     head = re.search(r"Scenarios: (.*?)\. Agents", text)
     return {"available": True, "table": table, "integrity": integ, "agents": agents, "story": story,
+            "sets": sets, "which": which,
             "scope": head.group(1) if head else ""}
 
 
