@@ -79,7 +79,8 @@ class Coordinator:
         def call(agent):
             return getattr(agent, method)(broadcast)
 
-        with ThreadPoolExecutor(max_workers=3) as ex:
+        ex = ThreadPoolExecutor(max_workers=3)
+        try:
             futs = {r: ex.submit(call, a) for r, a in present.items()}
             for r, f in futs.items():
                 self.calls += 1
@@ -91,6 +92,8 @@ class Coordinator:
                 except Exception as e:  # pydantic validation, timeouts, anything else
                     self.log.append(r, turn, Event.SCHEMA_REJECT, {"code": type(e).__name__, "detail": str(e)[:300]})
                     out[r] = None
+        finally:
+            ex.shutdown(wait=False, cancel_futures=True)  # never wait on a hung agent
         for r in config.ROLES:
             out.setdefault(r, None)
         return out
@@ -109,6 +112,14 @@ class Coordinator:
             if why:
                 raise _Void(Event.MANDATE_VIOLATION, why)
         self._check_limits(role, msg.stated_limits, turn)
+
+    def _tighten_limits(self, role, limits: dict):
+        cur = self.t1_limits.setdefault(role, {})
+        for k, v in limits.items():
+            if k not in cur:
+                cur[k] = v
+            else:
+                cur[k] = max(cur[k], v) if LIMIT_KEYS[k][0] == "min" else min(cur[k], v)
 
     def _check_limits(self, role, limits: dict, turn):
         """Workbook limits can never be loosened; later turns may never loosen turn-1 limits."""
@@ -184,7 +195,8 @@ class Coordinator:
         # ---------------- Turn 2: rankings in the overlap
         ordered = sorted(F, key=self._public_key)
         bc = ordered[: config.BROADCAST_MAX_PLANS]
-        must = ["HOLD-G1", fallback.decide(pub, self.space, self.contracts, self.forecast, "preview").plan.plan_id]
+        fcfs_eq = next((p.plan_id for p in F if p.strategy == "HOLD"), None)  # G1 first, then S1..
+        must = [pid for pid in (fcfs_eq,) if pid] + [fallback.decide(pub, self.space, self.contracts, self.forecast, "preview").plan.plan_id]
         for pid in must:
             p = next((x for x in F if x.plan_id == pid), None)
             if p is not None and p not in bc:
@@ -211,6 +223,7 @@ class Coordinator:
             new = self.contracts + m.extra_contracts
             assert ct.is_tightening(self.contracts, new, self.space, pub)  # additions only tighten
             self.contracts = new
+            self._tighten_limits(r, m.stated_limits)
             rankings[r] = m.ranking
             log.append(r, 2, Event.RANKING, {"message": m.model_dump(mode="json")})
         F2 = [p for p in ct.feasible(bc, self.contracts, pub)]
@@ -250,6 +263,7 @@ class Coordinator:
                 over = check_commitment(self.mandates[r], m.owned_fields)
                 if over:
                     raise _Void(Event.MANDATE_VIOLATION, f"claimed fields outside mandate: {over}")
+                self._tighten_limits(r, m.stated_limits)
                 for k, v in self.t1_limits.get(r, {}).items():
                     field_name = LIMIT_KEYS[k][1]
                     if field_name and m.accept and getattr(chosen, field_name) > v:

@@ -70,3 +70,37 @@ def test_prompts_never_contain_sealed(tmp_path, showcase):
     _, _, prompts = run_scenario(showcase, B(), run_dir=tmp_path)
     from dn.leakage import scan
     assert scan(prompts, unseal(showcase)) == []
+
+
+class TightensThenAccepts(ScriptedBackend):
+    """Airline states a hold limit of 1 min in turn 2, then accepts a plan with a 15 min hold."""
+
+    def __call__(self, role, turn, system, user, draft_cls):
+        from dn.agents.base import LimitDraft
+        d = super().__call__(role, turn, system, user, draft_cls)
+        if turn == 2:
+            d.stated_limits = [LimitDraft(key="hold_limit_min", value=1)]
+        return d
+
+
+def test_turn2_limits_enforced_at_turn3(tmp_path, showcase):
+    b = B()
+    b["AIRLINE"] = TightensThenAccepts()
+    o, log, _ = run_scenario(showcase, b, run_dir=tmp_path)
+    assert o.status == "FALLBACK" and "SELF_CONTRADICTION" in events(log)
+
+
+def test_blank_signature_fails_verification(tmp_path, showcase):
+    import hashlib
+    from dn.consensus_log import GENESIS, canonical_json, read, verify_entries
+    _, log, _ = run_scenario(showcase, B(), run_dir=tmp_path)
+    entries = read(log.path)
+    i = next(i for i, e in enumerate(entries) if e["event"] == "COMMITMENT")
+    entries[i]["payload"]["message"].update(plan_id="FORGED", signature="")
+    prev = GENESIS
+    for e in entries:
+        e["prev_hash"] = prev
+        e["hash"] = hashlib.sha256((prev + canonical_json({k: v for k, v in e.items() if k != "hash"})).encode()).hexdigest()
+        prev = e["hash"]
+    ok, seq, _ = verify_entries(entries)
+    assert not ok and seq == i

@@ -10,6 +10,7 @@ from pathlib import Path
 from . import config
 
 GENESIS = "0" * 64
+SIGNED_MESSAGE_EVENTS = {"CONTRACTS", "RANKING", "COMMITMENT"}
 
 
 def canonical_json(obj) -> str:
@@ -74,13 +75,24 @@ def read(path) -> list[dict]:
 def verify_entries(entries: list[dict]) -> tuple[bool, int | None, str]:
     """Recompute the chain and every agent signature. Returns (ok, first_bad_seq, message)."""
     prev = GENESIS
+    commitments: dict = {}
     for i, e in enumerate(entries):
         if e.get("seq") != i or e.get("prev_hash") != prev or _entry_hash(e) != e.get("hash"):
             return False, i, f"hash chain broken at entry {i}"
-        msg = e["payload"].get("message") if isinstance(e.get("payload"), dict) else None
-        if isinstance(msg, dict) and msg.get("signature") and msg.get("role") in config.ORG_KEYS:
-            if not verify_signature(msg["role"], msg):
-                return False, i, f"bad {msg['role']} signature at entry {i}"
+        payload = e.get("payload") if isinstance(e.get("payload"), dict) else {}
+        signed = None
+        if e.get("event") in SIGNED_MESSAGE_EVENTS:
+            signed = payload.get("message")
+        elif e.get("event") == "MANDATE_ISSUED":
+            signed = payload
+        if signed is not None:
+            if not isinstance(signed, dict) or signed.get("role") not in config.ORG_KEYS \
+                    or not signed.get("signature") or not verify_signature(signed["role"], signed):
+                return False, i, f"missing or bad signature at entry {i}"
+            if e.get("event") == "COMMITMENT" and signed.get("accept"):
+                commitments[signed["role"]] = signed["signature"]
+        if e.get("event") == "DONE" and payload.get("signatures") != commitments:
+            return False, i, f"DONE signatures do not match commitments at entry {i}"
         prev = e["hash"]
     return True, None, f"Log verified ({len(entries)} entries)"
 

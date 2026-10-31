@@ -95,3 +95,12 @@ def check_constants() -> None:
 @lru_cache(maxsize=1)
 def load_rules_of_play() -> pd.DataFrame:
     return pd.read_excel(config.WORKBOOK, sheet_name="rules_of_play", header=0)
+
+
+def warm() -> None:
+    """Load every cached table up front (call before starting worker threads)."""
+    from . import forecast
+
+    load_flights(); load_airports(); load_wake_table(); load_fuel_and_crew(); load_rules_of_play()
+    forecast._population("WEATHER_DELAY", "DESTINATION_AIRPORT", "SCHEDULED_ARRIVAL")
+    forecast._population("LATE_AIRCRAFT_DELAY", "ORIGIN_AIRPORT", "SCHEDULED_DEPARTURE")

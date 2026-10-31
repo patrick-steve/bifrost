@@ -96,7 +96,9 @@ class Scenario:
 
 def unseal(scenario: Scenario) -> SealedOutcome:
     """Only simulate, baselines, evaluate and tests may read the real outcome."""
-    caller = inspect.stack()[1].frame.f_globals.get("__name__", "")
+    g = inspect.stack()[1].frame.f_globals
+    spec = g.get("__spec__")
+    caller = spec.name if g.get("__name__") == "__main__" and spec is not None else g.get("__name__", "")
     if caller not in _UNSEAL_ALLOWED and not caller.startswith(("tests", "test_")):
         raise PermissionError(f"{caller} may not read the sealed outcome")
     return scenario._sealed
