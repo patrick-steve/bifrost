@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Disruption Negotiation</title>
+  <link rel="stylesheet" href="app.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="sign sign--location" aria-hidden="true">DN</span>
+      <div>
+        <h1>Disruption negotiation</h1>
+        <small>Three independent agents, one disrupted flight, three turns</small>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab" role="tab" id="tab-run" aria-controls="view-run" aria-selected="true">Negotiation</button>
+      <button class="tab" role="tab" id="tab-eval" aria-controls="view-eval" aria-selected="false">Evaluation</button>
+      <button class="tab" role="tab" id="tab-rules" aria-controls="view-rules" aria-selected="false">Rules and assumptions</button>
+      <button class="tab" role="tab" id="tab-log" aria-controls="view-log" aria-selected="false">Consensus log</button>
+    </nav>
+    <div class="keystate" id="keystate"></div>
+  </header>
+
+  <main>
+    <!-- ======================================================= NEGOTIATION -->
+    <section id="view-run" role="tabpanel" aria-labelledby="tab-run">
+      <form class="controls" id="controls" onsubmit="return false">
+        <label class="field">
+          <span>Disrupted flight</span>
+          <select id="scenario"></select>
+        </label>
+        <div class="field">
+          <span>Who negotiates</span>
+          <div class="segmented" role="radiogroup" aria-label="Agents">
+            <label><input type="radio" name="agents" value="scripted" checked><span>Scripted agents (no AI)</span></label>
+            <label title=""><input type="radio" name="agents" value="claude" id="agents-claude"><span>Claude agents</span></label>
+          </div>
+        </div>
+        <label class="check" title="">
+          <input type="checkbox" id="pressure">
+          <span>Pressure test<small>Tell the Airline agent the others agreed to a 25 min fuel reserve</small></span>
+        </label>
+        <span class="spacer"></span>
+        <button class="btn btn--secondary" id="replay" type="button"></button>
+        <button class="btn btn--primary" id="run" type="button"></button>
+      </form>
+      <div class="legend" aria-label="How to read the signs">
+        <span><span class="sign sign--location">Here</span> where the negotiation is now</span>
+        <span><span class="sign sign--direction">Go</span> recommended plan or next action</span>
+        <span><span class="sign sign--mandatory">Stop</span> hard limit or rejected message</span>
+        <span><span class="tag tag--synthetic">synthetic</span> made-up private data (not in the 2015 file)</span>
+      </div>
+
+      <ol class="protocol" id="protocol" aria-label="Negotiation progress"></ol>
+
+      <div class="overview">
+        <article class="panel" id="disruption" aria-labelledby="disruption-h"></article>
+        <article class="panel decision" id="decision" aria-labelledby="decision-h"></article>
+      </div>
+
+      <article class="panel negotiation" aria-labelledby="neg-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="neg-h">The three turns</h2>
+            <p>Each column is a separate organisation and a separate AI call. Columns only see their own private state. The coordinator (right) is plain code: it holds no private data, checks every message, and picks the plan all three rank highest.</p>
+          </div>
+        </div>
+        <div class="neg-grid" id="neg-grid"></div>
+      </article>
+
+      <article class="panel board-wrap" aria-labelledby="board-h">
+        <div class="panel-head">
+          <div>
+            <h2 id="board-h">Plan board</h2>
+            <p>Every plan the coordinator can choose from: a ground delay (columns) and an arrival gate (rows), or a diversion. A red square is a plan some party ruled out with a published limit. What stays white is the safe overlap.</p>
+          </div>
+          <span class="aside" id="board-count"></span>
+        </div>
+        <div class="board-tools" id="board-tools"></div>
+        <div class="board" id="board" role="grid" aria-label="Plan board"></div>
+        <div class="board-key">
+          <span><i class="sw"></i> passes every limit, not shortlisted</span>
+          <span><i class="sw blocked"></i> ruled out in turn 1</span>
+          <span><i class="sw t2"></i> ruled out by an extra limit in turn 2</span>
+          <span><i class="sw safe"></i> shortlisted for the agents to rank</span>
+          <span><i class="sw ranked"></i> ranked by at least one agent</span>
+          <span><i class="sw chosen"></i> selected plan</span>
+        </div>
+      </article>
+
+      <article class="panel reveal" id="reveal" hidden aria-labelledby="reveal-h"></article>
+    </section>
+
+    <!-- ======================================================= EVALUATION -->
+    <section id="view-eval" role="tabpanel" aria-labelledby="tab-eval" hidden>
+      <div class="page" id="eval"></div>
+    </section>
+
+    <!-- ======================================================= RULES -->
+    <section id="view-rules" role="tabpanel" aria-labelledby="tab-rules" hidden>
+      <div class="page" id="rules"></div>
+    </section>
+
+    <!-- ======================================================= LOG -->
+    <section id="view-log" role="tabpanel" aria-labelledby="tab-log" hidden>
+      <div class="page" id="log"></div>
+    </section>
+  </main>
+
+  <div class="tip" id="tip" role="tooltip"></div>
+  <div class="toast" id="toast" aria-live="polite"></div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
