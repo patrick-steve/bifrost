@@ -288,7 +288,12 @@ def rules():
 
 
 @app.get("/")
-def index():
+def landing():
+    return FileResponse(STATIC / "landing.html")
+
+
+@app.get("/dashboard")
+def dashboard():
     return FileResponse(STATIC / "index.html")
 
 

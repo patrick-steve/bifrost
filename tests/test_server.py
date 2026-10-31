@@ -38,3 +38,5 @@ def test_bad_run_id_rejected():
 
 def test_page_served():
     assert c.get("/").status_code == 200 and c.get("/app.js").status_code == 200
+    assert "meeting" in c.get("/").text.lower() or "storm" in c.get("/").text.lower()
+    assert c.get("/dashboard").status_code == 200
