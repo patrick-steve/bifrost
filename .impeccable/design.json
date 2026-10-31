@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-31T07:04:16.439443+00:00",
+  "generatedAt": "2026-10-31T07:28:53.349603+00:00",
   "title": "Design System: Disruption Negotiation",
   "extensions": {
     "colorMeta": {
@@ -288,6 +288,51 @@
           "#d8d2c2",
           "#efece5"
         ]
+      },
+      "slab": {
+        "role": "neutral",
+        "displayName": "Tarmac Slab",
+        "canonical": "#24272b",
+        "tonalRamp": [
+          "#0e1011",
+          "#16171a",
+          "#1d1f22",
+          "#24272b",
+          "#717375",
+          "#a7a9aa",
+          "#d3d4d5",
+          "#edeeee"
+        ]
+      },
+      "slab-ink": {
+        "role": "neutral",
+        "displayName": "Slab Ink",
+        "canonical": "#e9ecee",
+        "tonalRamp": [
+          "#5d5e5f",
+          "#8c8e8f",
+          "#babdbe",
+          "#e9ecee",
+          "#f1f3f4",
+          "#f6f7f8",
+          "#fbfbfc",
+          "#fdfdfe"
+        ]
+      },
+      "slab-ink-2": {
+        "role": "neutral",
+        "displayName": "Slab Ink Mid",
+        "canonical": "#b4bbc0",
+        "tonalRamp": [
+          "#484b4d",
+          "#6c7073",
+          "#90969a",
+          "#b4bbc0",
+          "#ced3d6",
+          "#e1e4e6",
+          "#f0f1f2",
+          "#f9fafa"
+        ]
       }
     },
     "typographyMeta": {
@@ -318,6 +363,22 @@
       "body-small": {
         "displayName": "Body Small",
         "purpose": "Captions and cell content."
+      },
+      "persuade-display": {
+        "displayName": "Persuade Display",
+        "purpose": "The one hook headline in an explainer first viewport."
+      },
+      "persuade-section": {
+        "displayName": "Persuade Section",
+        "purpose": "Headings of full-width explainer bands and the closing statement."
+      },
+      "persuade-step": {
+        "displayName": "Persuade Step",
+        "purpose": "Heading of each scroll step beside the meeting table."
+      },
+      "persuade-body": {
+        "displayName": "Persuade Body",
+        "purpose": "All explainer prose."
       }
     },
     "shadows": [
@@ -335,6 +396,16 @@
         "name": "focus",
         "value": "outline: 2px solid #141414; outline-offset: 2px; box-shadow: 0 0 0 4px #f5c400",
         "purpose": "Global focus-visible ring."
+      },
+      {
+        "name": "seat",
+        "value": "0 1px 2px rgb(20 21 23 / 0.08), 0 10px 24px -14px rgb(20 21 23 / 0.35)",
+        "purpose": "Resting weight of meeting-table seat cards. Static."
+      },
+      {
+        "name": "slab",
+        "value": "inset 0 0 0 10px #24272b, inset 0 0 0 12px #f5c400, 0 18px 40px -20px rgb(20 21 23 / 0.6)",
+        "purpose": "Painted yellow keyline inset 10px on the slab, plus its cast shadow. Static."
       }
     ],
     "motion": [
@@ -357,6 +428,26 @@
         "name": "reduced-motion",
         "value": "1ms",
         "purpose": "All animation and transition collapsed under prefers-reduced-motion."
+      },
+      {
+        "name": "step-focus",
+        "value": "400ms opacity, 0.32 to 1",
+        "purpose": "Explainer step nearest the viewport centre comes to full opacity."
+      },
+      {
+        "name": "table-reveal",
+        "value": "max-height 520ms, opacity 360ms, standard ease",
+        "purpose": "Seat notes, secrets, ranks, stamps and approvals appearing per step."
+      },
+      {
+        "name": "option-strike",
+        "value": "260ms per cell, 6ms stagger",
+        "purpose": "Option grid turning struck or safe when the chair checks."
+      },
+      {
+        "name": "plan-land",
+        "value": "700ms, translateY -14px and scale 1.06 to rest",
+        "purpose": "The direction sign landing on the slab in round 3."
       }
     ],
     "breakpoints": [
@@ -367,6 +458,10 @@
       {
         "name": "phone",
         "value": "760px"
+      },
+      {
+        "name": "explainer-narrow",
+        "value": "960px"
       }
     ]
   },
@@ -442,6 +537,22 @@
       "description": "Signature: every plan a cell; red where ruled out, yellow where chosen.",
       "html": "<div class=\"ds-board\"><span class=\"ds-pc\"></span><span class=\"ds-pc ds-blk\">ATC</span><span class=\"ds-pc ds-blk ds-t2\">AIR</span><span class=\"ds-pc ds-safe\"></span><span class=\"ds-pc ds-chosen\">&rarr;</span></div>",
       "css": ":root{--ground:#dfe2e4;--surface:#f7f8f8;--ink:#141517;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--yellow-tint:#fbf0c2}.ds-board{display:grid;grid-template-columns:repeat(5,40px);gap:3px}.ds-pc{height:34px;border-radius:1px;display:grid;place-items:center;background:var(--sign-white);box-shadow:inset 0 0 0 1px var(--rule);font:700 11px/1 'Barlow Condensed',sans-serif;transition:background 300ms,box-shadow 300ms}.ds-pc:hover{outline:2px solid var(--ink);outline-offset:1px}.ds-blk{background:var(--sign-red);color:var(--sign-white);box-shadow:none;font-size:10px}.ds-t2{box-shadow:inset 0 0 0 3px var(--sign-black)}.ds-safe{box-shadow:inset 0 0 0 2px var(--go)}.ds-chosen{background:var(--sign-yellow);color:var(--sign-black);box-shadow:inset 0 0 0 2px var(--sign-black)}"
+    },
+    {
+      "name": "Large CTA",
+      "kind": "button",
+      "refersTo": "button-cta",
+      "description": "Explainer primary action: open the live demo. Big variant closes the page.",
+      "html": "<a class=\"ds-cta\" href=\"#\">Open the live demo <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a>",
+      "css": ":root{--surface:#f7f8f8;--surface-2:#edf0f1;--ink:#141517;--ink-3:#6a6d72;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--slab:#24272b;--slab-ink:#e9ecee;--slab-ink-2:#b4bbc0}.ds-cta{display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:var(--sign-yellow);color:var(--sign-black);border-radius:2px;font:700 19px/1 'Barlow Condensed','Arial Narrow',sans-serif;letter-spacing:.05em;text-transform:uppercase;padding:15px 20px;box-shadow:inset 0 0 0 1px rgb(0 0 0/.15);transition:background 160ms cubic-bezier(.16,1,.3,1),transform 160ms cubic-bezier(.16,1,.3,1)}.ds-cta svg{transition:transform 200ms cubic-bezier(.16,1,.3,1)}.ds-cta:hover{background:#ffd21a}.ds-cta:hover svg{transform:translateX(3px)}.ds-cta:active{transform:translateY(1px)}.ds-cta:focus-visible{outline:2px solid var(--sign-black);outline-offset:2px;box-shadow:0 0 0 4px var(--sign-yellow)}"
+    },
+    {
+      "name": "Meeting Table",
+      "kind": "custom",
+      "refersTo": "table-slab",
+      "description": "Signature explainer component: seats around a dark slab with a painted yellow keyline; shown here at the round-3 state.",
+      "html": "<div class=\"ds-mt\"><div class=\"ds-seat\" style=\"grid-area:a\"><span class=\"ds-loc\">Airline</span><span class=\"ds-role\">Crew, fuel, passengers</span><span class=\"ds-stamp\">Signed</span></div><div class=\"ds-seat\" style=\"grid-area:t\"><span class=\"ds-loc\">ATC</span><span class=\"ds-role\">Queue of landing planes</span><span class=\"ds-stamp\">Signed</span></div><div class=\"ds-seat\" style=\"grid-area:g\"><span class=\"ds-loc\">Ground</span><span class=\"ds-role\">Gates and ramp crew</span><span class=\"ds-stamp\">Signed</span></div><div class=\"ds-slab\"><span class=\"ds-loc\">Round 3 of 3</span><div class=\"ds-opts\"><i class=\"x\"></i><i class=\"ok\"></i><i class=\"x\"></i><i class=\"ok\"></i><i class=\"ok\"></i><i class=\"pick\"></i><i class=\"x\"></i><i class=\"ok\"></i><i class=\"x\"></i><i class=\"x\"></i><i class=\"ok\"></i><i class=\"ok\"></i></div><span class=\"ds-plan\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg> Wait 115 min · gate S1</span></div><div class=\"ds-chair\"><span class=\"ds-quiet\">Chair: plain code, no AI</span></div></div>",
+      "css": ":root{--surface:#f7f8f8;--surface-2:#edf0f1;--ink:#141517;--ink-3:#6a6d72;--rule:#c6cbce;--rule-strong:#858c91;--sign-black:#141414;--sign-yellow:#f5c400;--sign-red:#c4122f;--sign-white:#fff;--go:#1d6b3a;--slab:#24272b;--slab-ink:#e9ecee;--slab-ink-2:#b4bbc0}.ds-mt{display:grid;gap:14px;max-width:560px;grid-template-columns:1fr 1.45fr 1fr;grid-template-areas:'. a .' 't s g' '. c .';align-items:center;font:400 14px/1.4 Barlow,system-ui,sans-serif;color:var(--ink)}.ds-seat{display:grid;gap:6px;justify-items:start;background:var(--surface);border-radius:2px;padding:12px;box-shadow:0 1px 2px rgb(20 21 23/.08),0 10px 24px -14px rgb(20 21 23/.35)}.ds-loc,.ds-quiet{font:700 15px/1 'Barlow Condensed',sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:7px 10px;border-radius:2px;background:var(--sign-black);color:var(--sign-yellow);box-shadow:inset 0 0 0 2px var(--sign-yellow),0 0 0 1px var(--sign-black)}.ds-quiet{background:transparent;color:#44474c;box-shadow:inset 0 0 0 1px var(--rule-strong)}.ds-role{font-size:13px;color:var(--ink-3)}.ds-stamp{font:700 14px/1 'Barlow Condensed',sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--go);box-shadow:inset 0 0 0 2px var(--go);padding:6px 8px;border-radius:2px;transform:rotate(-4deg)}.ds-slab{grid-area:s;display:grid;gap:14px;justify-items:center;background:var(--slab);color:var(--slab-ink);border-radius:2px;padding:26px 24px;box-shadow:inset 0 0 0 10px var(--slab),inset 0 0 0 12px var(--sign-yellow),0 18px 40px -20px rgb(20 21 23/.6)}.ds-opts{display:grid;grid-template-columns:repeat(6,1fr);gap:2px;width:100%}.ds-opts i{aspect-ratio:1;border-radius:1px;background:#4a4f55}.ds-opts .x{background:var(--sign-red)}.ds-opts .ok{background:var(--slab-ink)}.ds-opts .pick{background:var(--sign-yellow);box-shadow:0 0 0 2px var(--sign-yellow)}.ds-plan{display:inline-flex;gap:8px;align-items:center;font:700 17px/1.15 'Barlow Condensed',sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:10px 14px;border-radius:2px;background:var(--sign-yellow);color:var(--sign-black)}.ds-chair{grid-area:c;justify-self:center}"
     }
   ],
   "narrative": {
@@ -453,7 +564,8 @@
       "A fourth, quieter signal, signal green (go), only for signed and verified states.",
       "Barlow Condensed uppercase for panels and labels, Barlow for prose, tabular numerals throughout.",
       "Square 2px corners; plan-board cells at 1px.",
-      "Motion only to advance the story: turns reveal in sequence while the location sign moves."
+      "Motion only to advance the story: turns reveal in sequence while the location sign moves.",
+      "Explainer (Persuade) surfaces scale the same signs up and add one dark slab, the meeting table, where the story advances step by step."
     ],
     "rules": [
       {
@@ -469,6 +581,11 @@
       {
         "name": "The Not Only Colour Rule",
         "body": "Every signal colour travels with text or an icon (party code in a blocked cell, \"Signed\", \"Rejected\", arrow on direction).",
+        "section": "colors"
+      },
+      {
+        "name": "The Painted Slab Rule",
+        "body": "The slab is a table top, not a dark theme: it always carries its painted 2px yellow keyline set 10px in from the edge, and the sign colours keep their usual jobs on it (red struck out, yellow chosen, location sign for the round).",
         "section": "colors"
       },
       {
@@ -493,7 +610,8 @@
       "Do divide with 1px rules (rule) and keep corners at 2px (1px on plan cells).",
       "Do pair every signal colour with a word, party code or icon.",
       "Do mark synthetic values with the synthetic tag and scripted agents with \"no AI\".",
-      "Do keep numerals tabular."
+      "Do keep numerals tabular.",
+      "Do keep the meeting table's slab dark with its painted yellow keyline, and let sign colours keep their jobs on it."
     ],
     "donts": [
       "Don't use red, yellow or green as decoration or emphasis.",

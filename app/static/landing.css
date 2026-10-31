@@ -57,10 +57,6 @@ html { scroll-behavior: smooth; scroll-padding-top: calc(var(--bar-h) + 16px); }
 .step--hero h1 { font: 600 clamp(44px, 5.2vw, 76px)/0.98 var(--font-sign); letter-spacing: -0.005em; }
 .lede { font-size: clamp(18px, 1.35vw, 21px); color: var(--ink-2); max-width: 32em; }
 .actions { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; margin-top: 8px; }
-.promises-unused { list-style: none; margin: 12px 0 0; padding: 18px 0 0; border-top: 1px solid var(--rule); display: grid; gap: 10px; font-size: 16px; color: var(--ink-2); }
-.promises li { display: flex; align-items: center; gap: 12px; }
-.promises .sign { min-width: 96px; justify-content: center; }
-.scrollhint { font: 600 13px/1 var(--font-sign); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-top: 12px; }
 
 .stage { position: sticky; top: var(--bar-h); height: calc(100vh - var(--bar-h)); display: grid; place-items: center; padding: 24px 0; }
 
