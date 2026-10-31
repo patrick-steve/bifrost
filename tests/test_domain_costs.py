@@ -22,3 +22,15 @@ def test_late_inbound_never_diverts():
     p = Plan(plan_id="HOLD-G1", strategy="HOLD", target_arrival_min=0, gate="G1", hold_limit_min=15)
     o = plan_outcomes(p, F5.arr, "late_inbound_aircraft")
     assert not o["diverted"].any() and o["arr_delay"].tolist() == [0, 10, 20, 30, 40]
+
+
+def test_next_leg_breach_is_crew_swap_not_contract(showcase):
+    from dn.domain_costs import airline_expected_cost
+    from dn.forecast import for_scenario
+    from dn.plan_space import by_id, enumerate_plans
+    p = by_id(enumerate_plans(showcase.public))
+    f = for_scenario(showcase.public)
+    a30 = airline_expected_cost(p["GD30-G1"], f, showcase.public, showcase.airline_private)
+    a35 = airline_expected_cost(p["GD35-G1"], f, showcase.public, showcase.airline_private)
+    assert not a30["next_leg_crew_swap"] and a35["next_leg_crew_swap"]
+    assert not a35["duty_breach"]

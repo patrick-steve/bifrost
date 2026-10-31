@@ -41,6 +41,11 @@ def public_score(plan, forecast, disruption: str) -> tuple[float, float]:
     return float(o["diverted"].mean()), (ead if ead == ead else float("inf"))
 
 
+def duty_at_arrival(duty_used_h, decision_time_min, arrival_min) -> float:
+    """Crew duty (h) when this leg lands."""
+    return duty_used_h + (arrival_min - decision_time_min) / 60
+
+
 def duty_after_next_leg(duty_used_h, decision_time_min, arrival_min, turnaround_min, next_leg) -> float:
     """Crew duty (h) at the end of the next leg; crew follows the aircraft."""
     if next_leg is None:
@@ -71,20 +76,23 @@ def airline_expected_cost(plan, forecast, public, airline_private) -> dict:
         missed += np.where(np.isnan(arr_abs) | (arr_abs > c.latest_arrival_min), c.passengers, 0)
     exp_hold = float(o["hold"].mean())
     duty = None
-    breach = False
+    breach = swap = False
     if plan.strategy != "DIVERT":
         worst_arr = public.scheduled_arrival_min + plan.ground_delay_min + plan.hold_limit_min
+        breach = duty_at_arrival(airline_private.crew_duty_used_h, public.decision_time_min,
+                                 worst_arr) > config.CREW_MAX_DUTY_H
         duty = duty_after_next_leg(airline_private.crew_duty_used_h, public.decision_time_min, worst_arr,
                                    public.destination_airport.min_turnaround_min, public.next_leg)
-        breach = duty > config.CREW_MAX_DUTY_H
+        swap = public.next_leg is not None and duty > config.CREW_MAX_DUTY_H
     return {
         "p_divert": round(float(o["diverted"].mean()), 3),
         "expected_holding_min": round(exp_hold, 2),
         "expected_holding_fuel_kg": round(exp_hold / 60 * airline_private.holding_burn_kg_per_h, 1),
         "expected_arrival_delay_min": round(_nanmean(o["arr_delay"]), 1),
         "expected_missed_connection_pax": round(float(missed.mean()), 2),
-        "worst_case_duty_h": None if duty is None else round(duty, 2),
+        "worst_case_duty_after_next_leg_h": None if duty is None else round(duty, 2),
         "duty_breach": bool(breach),
+        "next_leg_crew_swap": bool(swap),
         "holding_turbulence": airline_private.holding_turbulence,
     }
 

@@ -133,7 +133,7 @@ Scenario builder (code) turns a CSV row + workbook into each domain's private st
 | Weather capacity factor | 50% of `max_runway_ops_per_hour` during the weather window | Team assumption |
 | Arrival share of runway ops | 50% | Team assumption |
 | Background arrival demand | 80% of reduced arrival capacity, seeded | Data only contains delayed flights |
-| Crew follows the aircraft | Yes | Simplification |
+| Crew follows the aircraft | Yes, unless the next leg would break the 13 h duty limit: then the airline swaps in a fresh crew for the next leg (escalated to the airline duty manager, counted as a crew swap). Duty on this leg is a hard limit. | Changed 31 Oct 14:50: the earlier rule made a next-leg duty problem force a diversion of this flight, which airlines do not do; it caused 15 of 41 weather diversions in the evaluation |
 | Passenger connections, gate occupancy, crew shifts, crew duty used | Seeded synthetic | Not in data |
 | Alternate airport | Same CITY in workbook, else largest `size_class` in same STATE | Data-driven, no coordinates provided |
 | Random seed | 42 | Reproducibility |

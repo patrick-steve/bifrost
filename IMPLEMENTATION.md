@@ -218,7 +218,7 @@ Rules:
 - `explain_empty(plan_space, contracts)` returns the smallest set of contracts whose intersection is empty (greedy: add contracts in publication order until empty, then try removing each). Used for "no safe answer" messages.
 
 ATC helper: `available_arrival_minutes` = candidate target minutes where wake spacing (workbook nm ÷ 150 kt, leader→follower and follower→next) to booked arrivals is met and the hourly reduced arrival capacity is not exceeded.
-Airline helper: `max_ground_delay` from crew duty (largest d such that duty after next leg ≤ 13 h, assuming next leg block time = 60 min if unknown); `latest_arrival` from connections only if the LLM decides they are hard (default: connections are soft).
+Airline helper: `max_ground_delay` from crew duty on **this leg** (largest d such that duty at arrival, with 15 min holding, ≤ 13 h). A next-leg duty breach (next leg block time = 60 min if unknown) is a soft cost `next_leg_crew_swap`, escalated to the airline duty manager, not a contract (changed 31 Oct, see PLAN section 10); `latest_arrival` from connections only if the LLM decides they are hard (default: connections are soft).
 Ground helper: `gate_window_free` per gate from busy intervals; `gate_change_notice` = 20.
 
 Tests: each type with satisfying and violating plans; tighten-only accepts a strict subset and rejects a superset; `explain_empty` on a constructed conflict.

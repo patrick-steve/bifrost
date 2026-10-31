@@ -137,11 +137,22 @@ def _mean(xs):
     return round(statistics.mean(xs), 1) if xs else None
 
 
-def summarise(rows: list[dict], name: str) -> dict:
+def summarise(rows: list[dict], name: str, actual: dict | None = None) -> dict:
     sims = [r["sim"] for r in rows]
     nd = [s for s in sims if not s["diverted"]]
+    paired = paired_nl = None
+    if actual:  # same flights only: removes the survivor bias of the plain mean
+        diffs = [r["sim"]["arrival_delay_min"] - actual[r["scenario_id"]]["sim"]["arrival_delay_min"]
+                 for r in rows if not r["sim"]["diverted"]]
+        paired = _mean(diffs)
+        nl = [r["sim"]["next_leg_departure_delay_min"] - actual[r["scenario_id"]]["sim"]["next_leg_departure_delay_min"]
+              for r in rows if not r["sim"]["diverted"] and r["sim"]["next_leg_departure_delay_min"] is not None
+              and actual[r["scenario_id"]]["sim"]["next_leg_departure_delay_min"] is not None]
+        paired_nl = _mean(nl)
     out = {
         "system": name, "n": len(rows),
+        "arrival_delay_vs_2015_same_flights_min": paired,
+        "next_leg_delay_vs_2015_same_flights_min": paired_nl,
         "mean_arrival_delay_min (not diverted)": _mean([s["arrival_delay_min"] for s in nd]),
         "diversions": sum(s["diverted"] for s in sims),
         "mean_holding_min": _mean([s["holding_min"] for s in sims]),
@@ -239,7 +250,8 @@ def main(argv=None):
         with ThreadPoolExecutor(max_workers=a.workers if sysname in ("ours", "hindsight") else 1) as ex:
             results[sysname] = list(ex.map(lambda e: run_system(sysname, e, a.agents, cache=not a.fresh), entries))
         print(f"{sysname}: {len(results[sysname])} scenarios")
-    table = pd.DataFrame([summarise(results[s], NAMES[s]) for s in systems])
+    actual = {r["scenario_id"]: r for r in results["actual_2015"]}
+    table = pd.DataFrame([summarise(results[s], NAMES[s], None if s == "actual_2015" else actual) for s in systems])
     integ = integrity_tests(entries, a.agents)
     leak = sum(r.get("leakage_hits", 0) for r in results["ours"])
     integ["leakage"] = {"hits": leak, "pass": leak == 0}
@@ -261,7 +273,9 @@ def main(argv=None):
           "Missed connections and overtime are synthetic.\n", _md_table(table),
           "\nRead with care: mean arrival delay excludes diverted flights, so a system that diverts its hardest "
           "cases looks better on that column (survivor bias). No flight in the 2015 data was diverted; the model "
-          "diverts whenever the true delay exceeds ground delay + 15 min of holding, with no later re-plan.\n", "\n## Integrity tests\n",
+          "diverts whenever the true delay exceeds ground delay + 15 min of holding, with no later re-plan. "
+          "The two `vs_2015_same_flights` columns compare each system with the recorded outcome on the flights it "
+          "did not divert (negative = better than 2015).\n", "\n## Integrity tests\n",
           _md_table(pd.DataFrame([{"test": k, "pass": v.pop("pass"), "detail": json.dumps(v)} for k, v in integ.items()])),
           "\n## Story cases\n",
           f"- Agents beat the rulebook on connections (synthetic): {', '.join(better[:5]) or 'none found'}",

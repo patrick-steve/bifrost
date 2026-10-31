@@ -3,7 +3,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from .domain_costs import plan_outcomes
+from . import config
+from .domain_costs import duty_after_next_leg, plan_outcomes
 from .scenario import Scenario, unseal
 
 
@@ -21,7 +22,7 @@ def simulate(scenario: Scenario, plan) -> dict:
     arr_delay = None if diverted else float(o["arr_delay"][0])
     burn = scenario.airline_private.holding_burn_kg_per_h
     gp = scenario.ground_private
-    next_leg_delay, overtime, missed = None, 0.0, 0
+    next_leg_delay, overtime, missed, crew_swap = None, 0.0, 0, False
     if diverted:
         missed = sum(c.passengers for c in scenario.airline_private.connections)
     else:
@@ -30,6 +31,10 @@ def simulate(scenario: Scenario, plan) -> dict:
         if gp.next_leg_departure_min is not None:
             next_leg_delay = max(0.0, done - gp.next_leg_departure_min)
         overtime = max(0.0, done - gp.shift_end_min)
+        if pub.next_leg is not None:
+            ap = scenario.airline_private
+            crew_swap = duty_after_next_leg(ap.crew_duty_used_h, pub.decision_time_min, arrival,
+                                            gp.min_turnaround_min, pub.next_leg) > config.CREW_MAX_DUTY_H
         missed = sum(c.passengers for c in scenario.airline_private.connections
                      if arrival > c.latest_arrival_min)
     return {
@@ -44,6 +49,7 @@ def simulate(scenario: Scenario, plan) -> dict:
                             None if pub.next_leg is None else "operates"),
         "missed_connection_pax_synthetic": int(missed),
         "ground_overtime_min_synthetic": float(overtime),
+        "next_leg_crew_swap_synthetic": bool(crew_swap),
         "actual_2015": {"arrival_delay_min": s.arrival_delay,
                         "next_leg_departure_delay_min": s.next_leg_departure_delay},
         "label": "model estimate vs recorded 2015 outcome",

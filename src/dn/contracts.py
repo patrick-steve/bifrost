@@ -100,19 +100,18 @@ def atc_helper(public: PublicScenario, atc, plan_space) -> list:
 
 
 def airline_helper(public: PublicScenario, airline, plan_space) -> list:
-    from .domain_costs import duty_after_next_leg
+    """Hard limit: crew duty on THIS leg (with 15 min holding). A next-leg breach is a crew swap, a cost."""
+    from .domain_costs import duty_at_arrival
 
     best = -1
     for d in sorted({p.ground_delay_min for p in plan_space if p.strategy != "DIVERT"}):
         arr = public.scheduled_arrival_min + d + config.HOLD_BUDGET_MIN
-        duty = duty_after_next_leg(airline.crew_duty_used_h, public.decision_time_min, arr,
-                                   public.destination_airport.min_turnaround_min, public.next_leg)
-        if duty <= config.CREW_MAX_DUTY_H:
+        if duty_at_arrival(airline.crew_duty_used_h, public.decision_time_min, arr) <= config.CREW_MAX_DUTY_H:
             best = d
     out = []
     if best >= 0:
         out.append(MaxGroundDelay(publisher="AIRLINE", minutes=best,
-                                  reason="Crew duty limit 13 h including next leg"))
+                                  reason="Crew duty limit 13 h on this leg"))
     else:  # no ground delay keeps the crew legal: only diversion remains
         out.append(ForbidStrategy(publisher="AIRLINE", strategy="GROUND_DELAY", reason="Crew duty limit"))
         out.append(ForbidStrategy(publisher="AIRLINE", strategy="HOLD", reason="Crew duty limit"))

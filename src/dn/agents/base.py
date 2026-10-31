@@ -146,7 +146,9 @@ class ScriptedBackend:
                 if key == "holding_load":
                     return (c["holding_load"], pid)
                 if key == "_airline":
-                    return (c["duty_breach"], c["p_divert"], c["expected_missed_connection_pax"],
+                    # divert risk at or below the 10% target counts as acceptable, then cheaper is better
+                    return (c["duty_breach"], max(c["p_divert"], config.DIVERT_RISK_TARGET), c["next_leg_crew_swap"],
+                            c["expected_missed_connection_pax"],
                             c["expected_arrival_delay_min"] or 1e9, pid)
                 return (c["gate_change"], c["expected_next_leg_delay_min"] or 0,
                         c["expected_overtime_min"] or 0, pid)
@@ -268,6 +270,10 @@ class DomainAgent:
             if worst > self.mandate.overtime_budget_min:
                 accept, reason = False, ReasonCode.OVERTIME
                 self.last_private_flags.append("Ground overtime beyond 60 min budget needs ramp lead approval")
+        if accept and self.role == "AIRLINE" and plan.strategy != "DIVERT":
+            if airline_expected_cost(plan, self.forecast, self._public, self._private)["next_leg_crew_swap"]:
+                self.last_private_flags.append("Next leg may need a fresh crew (duty over 13 h): "
+                                               "airline duty manager approval")
         if accept and not ct.satisfies_all(plan, self.helper_contracts, self._public):
             accept, reason = False, ReasonCode.OUTSIDE_CONTRACTS
         msg = Turn3Commitment(role=self.role, plan_id=plan.plan_id, accept=accept,

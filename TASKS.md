@@ -36,8 +36,12 @@ Sizes: S ≈ <1 h, M ≈ 1–2 h, L ≈ 2–4 h (one person + Claude Code).
 8. Ground overtime budget and helper contracts are enforced inside each agent's own domain code at turn 3 (private data never leaves it).
 9. Log: every agent message and mandate must carry a valid HMAC, and DONE signatures must match the commitments. Known limit: truncating the tail of a log is not detectable without an external anchor.
 
-### Biggest open issue for the pitch
-Under the spec's simulation, about half of the 51 scenarios divert for every system (ours 26, FCFS 41), while 0 of the 2015 flights diverted. One decision point plus 15 min of holding cannot absorb long weather events. Options: (a) present it honestly as the model's limit, (b) add a re-plan at departure (out of spec). See `runs/eval_summary.md`.
+### Diversion issue: fixed (31 Oct, 15:00)
+Cause found by diagnosis over the 41 weather scenarios: 20 had a safe plan available, **15 were forced to divert by the airline's crew-duty contract**, 5 had weather longer than any plan (W > 120 + 15), 1 by ATC slots. The duty contract counted the *next* leg, so a next-leg duty problem forced this flight to divert. Airlines swap crews instead.
+Fix (PLAN section 10 and IMPLEMENTATION section 7 updated first): hard duty limit on **this leg** only; a next-leg breach is a soft cost `next_leg_crew_swap`, escalated to the airline duty manager and counted in the simulation. Scripted airline (and the airline prompt) treat divert risk at or below the 10% target as acceptable before preferring shorter delays.
+Result (scripted agents, 51 scenarios): diversions ours 26 -> 11, rulebook 25 -> 11, FCFS 41 (no change, no coordination). On the same non-diverted flights vs 2015: ours +3.5 min arrival, -24.4 min next-leg delay; rulebook +14.6 / -13.4.
+Tried and reverted: a departure re-check rule. Observing "still closed at departure" adds no information for flights shorter than their ground delay, and the naive version over-extended (showcase to 110 min).
+Showcase note: the O'Hare July early-morning forecast (n 41) has median 78 min and P90 178 min, so even a 115 min ground delay keeps a 22% divert risk. The real 31 min was the lucky case. Present this as the honest trade-off; the human chooses the risk.
 
 ---
 
