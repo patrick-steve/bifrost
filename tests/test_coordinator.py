@@ -104,3 +104,12 @@ def test_blank_signature_fails_verification(tmp_path, showcase):
         prev = e["hash"]
     ok, seq, _ = verify_entries(entries)
     assert not ok and seq == i
+
+
+def test_overtime_beyond_budget_escalates_not_blocks(tmp_path, showcase):
+    import copy
+    s = copy.deepcopy(showcase)
+    s.ground_private = s.ground_private.model_copy(update={"shift_end_min": s.public.scheduled_arrival_min - 120})
+    o, log, _ = run_scenario(s, B(), run_dir=tmp_path)
+    assert o.status == "DONE"
+    assert any("overtime" in x.lower() and "ramp lead" in x for x in o.escalations)

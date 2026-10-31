@@ -265,11 +265,15 @@ class DomainAgent:
         self.last_private_flags = []
         plan = next(p for p in self.plan_space if p.plan_id == broadcast["plan_id"])
         # Private-state hard rules enforced in code inside the domain, whatever the LLM said.
-        if accept and self.role == "GROUND" and plan.strategy != "DIVERT":
+        if self.role == "GROUND" and plan.strategy != "DIVERT":
             worst = ground_expected_cost(plan, self.forecast, self._public, self._private)["worst_case_overtime_min"]
             if worst > self.mandate.overtime_budget_min:
-                accept, reason = False, ReasonCode.OVERTIME
-                self.last_private_flags.append("Ground overtime beyond 60 min budget needs ramp lead approval")
+                # Beyond the mandate's overtime budget: escalate to the ramp lead instead of blocking (PLAN decision 6).
+                if not accept and reason in (None, ReasonCode.OVERTIME):
+                    accept, reason = True, None
+                self.last_private_flags.append(
+                    f"Ramp crew overtime up to {worst:.0f} min, beyond the {self.mandate.overtime_budget_min} min budget: "
+                    "ramp lead approval")
         if accept and self.role == "AIRLINE" and plan.strategy != "DIVERT":
             if airline_expected_cost(plan, self.forecast, self._public, self._private)["next_leg_crew_swap"]:
                 self.last_private_flags.append("Next leg may need a fresh crew (duty over 13 h): "

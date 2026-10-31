@@ -113,7 +113,7 @@ Scenario builder (code) turns a CSV row + workbook into each domain's private st
 3. Contracts may only tighten during a negotiation, never loosen. Loosening requires escalation to the human.
 4. Agents never see `WEATHER_DELAY`, `ARRIVAL_DELAY`, `ARRIVAL_TIME`, `WHEELS_ON`, `TAXI_IN`, `ELAPSED_TIME`, `AIR_TIME`, `DEPARTURE_TIME`, `DEPARTURE_DELAY`, delay-cause columns, or any downstream actuals.
 5. Forecast excludes the scenario's own day (no leakage).
-6. Diversion always requires human approval (outside every agent's mandate).
+6. Diversion always requires human approval (outside every agent's mandate). Ground overtime beyond the 60 min budget also requires the ramp lead's approval (escalation), but does not block the agreement: it is a cost and authority limit, not a safety limit (changed 31 Oct).
 7. Agents are separate LLM calls with separate system prompts, separate private state, no shared history. Temperature 0.
 8. No agent framework group chat or shared state. Coordinator is a plain Python state machine.
 9. Everything synthetic is labelled synthetic on screen.

@@ -233,7 +233,7 @@ DIVERT:  outside every mandate -> recommended plan is marked "needs airline duty
 ```
 - Each mandate is a pydantic object signed with the org's HMAC key at scenario start and shown in the UI.
 - `check_commitment(agent, plan, field_claims)`: an agent's commitment may only claim ownership of fields in its `may_set`. Any claim on a `may_not` field → `MANDATE_VIOLATION`, commitment void, logged, escalated.
-- Ground overtime: if the plan pushes turnaround completion past shift end by more than `overtime_budget_min`, Ground cannot sign; it must escalate.
+- Ground overtime: if the plan pushes turnaround completion past shift end by more than `overtime_budget_min`, Ground signs only its own field (gate) and the overtime beyond budget is escalated to the ramp lead, whose approval the plan then needs. (Changed 31 Oct: the earlier "cannot sign" rule caused 18 of 20 Claude-run fallbacks, handing a cost question to the rulebook, which usually picked a worse plan. Overtime is a cost and authority limit, not a safety limit.)
 
 ## 9. Domain cost tools (`domain_costs.py`)
 
