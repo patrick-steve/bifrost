@@ -80,13 +80,17 @@ def atc_helper(public: PublicScenario, atc, plan_space) -> list:
     ours = public.wake_category
     booked = sorted(atc.booked_arrivals, key=lambda b: b.minute)
     targets = sorted({p.target_arrival_min for p in plan_space if p.target_arrival_min is not None})
+    def spaced(m: int) -> bool:
+        leaders = [b for b in booked if b.minute <= m]
+        followers = [b for b in booked if b.minute >= m]
+        if leaders and m - leaders[-1].minute < wake_minutes(leaders[-1].wake, ours):
+            return False
+        return not (followers and followers[0].minute - m < wake_minutes(ours, followers[0].wake))
+
     ok = []
     for t in targets:
-        leaders = [b for b in booked if b.minute <= t]
-        followers = [b for b in booked if b.minute >= t]
-        if leaders and t - leaders[-1].minute < wake_minutes(leaders[-1].wake, ours):
-            continue
-        if followers and followers[0].minute - t < wake_minutes(ours, followers[0].wake):
+        # A target is the start of a 5-minute slot; ATC sequences the aircraft to any spaced minute in it.
+        if not any(spaced(m) for m in range(t, t + config.GROUND_DELAY_STEP_MIN)):
             continue
         if sum(t - 30 <= b.minute < t + 30 for b in booked) + 1 > atc.reduced_arrival_capacity_per_h:
             continue

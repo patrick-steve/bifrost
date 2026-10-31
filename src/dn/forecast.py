@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, timedelta
 from functools import lru_cache
 
 import numpy as np
@@ -52,20 +53,33 @@ def _population(column: str, airport_col: str, time_col: str) -> pd.DataFrame:
     p = df[df[column] > 0]
     return pd.DataFrame({
         "AIRPORT": p[airport_col].to_numpy(), "MONTH": p.MONTH.to_numpy(), "DAY": p.DAY.to_numpy(),
-        "HOUR": p[time_col].map(hhmm_to_min).to_numpy() // 60, "X": p[column].to_numpy(dtype=float),
+        "HOUR": (p[time_col].map(hhmm_to_min).to_numpy() % 1440) // 60, "X": p[column].to_numpy(dtype=float),
     })
 
 
 def _levels(pop: pd.DataFrame, airport: str, month: int, hour: int, exclude) -> tuple[int, np.ndarray]:
-    if exclude is not None:
-        pop = pop[~((pop.MONTH == exclude[0]) & (pop.DAY == exclude[1]))]
-    near = (pop.HOUR - hour).abs() <= 2
+    for m, d in _as_days(exclude):
+        pop = pop[~((pop.MONTH == m) & (pop.DAY == d))]
+    dh = (pop.HOUR - hour).abs()
+    near = np.minimum(dh, 24 - dh) <= 2
     at = pop.AIRPORT == airport
     for level, mask in ((1, at & (pop.MONTH == month) & near), (2, at & near), (3, at)):
         x = pop.X[mask].to_numpy()
         if len(x) >= MIN_N:
             return level, x
     return 4, pop.X.to_numpy()
+
+
+def _as_days(exclude) -> list:
+    """None, one (month, day), or a list of them."""
+    if exclude is None:
+        return []
+    return [exclude] if isinstance(exclude[0], (int, np.integer)) else list(exclude)
+
+
+def _next_day(month: int, day: int) -> tuple[int, int]:
+    d = date(2015, month, day) + timedelta(days=1)
+    return d.month, d.day
 
 
 def weather_forecast(dest: str, month: int, sched_arrival_min: int, exclude=None) -> Forecast:
@@ -82,7 +96,9 @@ def late_inbound_forecast(origin: str, month: int, sched_departure_min: int, exc
 
 
 def for_scenario(public) -> Forecast:
-    excl = (public.month, public.day)
+    excl = [(public.month, public.day)]
+    if public.scheduled_arrival_min >= 1440:  # arrives next calendar day: exclude that day too
+        excl.append(_next_day(public.month, public.day))
     if public.disruption == "weather_at_destination":
         return weather_forecast(public.destination, public.month, public.scheduled_arrival_min, excl)
     return late_inbound_forecast(public.origin, public.month, public.scheduled_departure_min, excl)

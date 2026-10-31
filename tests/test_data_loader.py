@@ -31,3 +31,9 @@ def test_wake():
 
 def test_constants_match_workbook():
     dl.check_constants()
+
+
+def test_timezone_same_day_arrival():
+    # ATL 2100 -> BHM 2056 local, 56 min block: same day, not +1 day
+    assert arrival_after_departure(1260, 1256, 56) == 1256
+    assert arrival_after_departure(1380, 30, 75) == 1470

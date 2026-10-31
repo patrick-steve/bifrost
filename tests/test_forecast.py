@@ -27,3 +27,16 @@ def test_level_fallbacks():
 def test_p_exceeds():
     f = fc.Forecast("weather", "X", 1, 5, (0, 10, 20, 30, 40))
     assert f.p_exceeds(25) == 0.4 and f.p_exceeds(40) == 0.0
+
+
+def test_hour_window_wraps_midnight():
+    f = fc._population("WEATHER_DELAY", "DESTINATION_AIRPORT", "SCHEDULED_ARRIVAL")
+    assert f.HOUR.max() <= 23
+
+
+def test_overnight_excludes_arrival_day(showcase):
+    pub = showcase.public.model_copy(update={"scheduled_arrival_min": 1440 + 30, "month": 1, "day": 31})
+    a = fc.for_scenario(pub)
+    b = fc.weather_forecast(pub.destination, 1, pub.scheduled_arrival_min, exclude=(1, 31))
+    assert a.n <= b.n
+    assert fc._next_day(12, 31) == (1, 1)

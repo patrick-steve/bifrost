@@ -180,8 +180,8 @@ def build(index: int, df: pd.DataFrame | None = None) -> Scenario:
     df = load_flights() if df is None else df
     row = df.loc[index]
     dep = hhmm_to_min(row.SCHEDULED_DEPARTURE)
-    arr = arrival_after_departure(dep, hhmm_to_min(row.SCHEDULED_ARRIVAL))
     sched_time = int(row.SCHEDULED_TIME)
+    arr = arrival_after_departure(dep, hhmm_to_min(row.SCHEDULED_ARRIVAL), sched_time)
     mode = "pre_departure" if sched_time <= config.PREDEPARTURE_MAX_SCHEDULED_TIME_MIN else "airborne"
     nl = find_next_leg(df, row, arr)
     next_leg = None
